@@ -10,12 +10,25 @@ class Ball:
         self.colour = colour
         self.ball_id = None
     
-    def place_ball(self, canvas, x, y):
+    def place_ball(self, x, y):
         x1 = x - self.radius
         y1 = y - self.radius
         x2 = x + self.radius
         y2 = y + self.radius
         self.ball_id = canvas.create_oval(x1, y1, x2, y2, fill=self.colour)
+
+    def get_position(self):
+        pos = canvas.coords(self.ball_id)
+        centre_x = (pos[0] + pos[2]) / 2
+        centre_y = (pos[1] + pos[3]) / 2
+        return (centre_x, centre_y)
+
+
+def on_mouse_motion(event):
+
+    pass
+# class Player(Ball):
+#     pass
 
 
 # Create 1920x1080 window with green canvas
@@ -27,8 +40,10 @@ canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
 player = Ball(15, "black")
-player.place_ball(canvas, canvas_width/2, canvas_height/2)
+player.place_ball(canvas_width/2, canvas_height/2)
+print(player.get_position())
 
+# window.bind('<Motion>', on_mouse_motion)
 
 
 window.mainloop()
