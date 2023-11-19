@@ -25,8 +25,15 @@ class Ball:
 
 
 def on_mouse_motion(event):
+    x = player.get_position()[0]
+    y = player.get_position()[1]
+    canvas.move(player.ball_id, event.x - x, event.y - y)
 
-    pass
+def update_game():
+    window.update()
+    window.after(1, update_game)
+
+
 # class Player(Ball):
 #     pass
 
@@ -39,11 +46,11 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-player = Ball(15, "black")
+player = Ball(12, "black")
 player.place_ball(canvas_width/2, canvas_height/2)
 print(player.get_position())
 
-# window.bind('<Motion>', on_mouse_motion)
-
+window.bind('<Motion>', on_mouse_motion)
+update_game()
 
 window.mainloop()
