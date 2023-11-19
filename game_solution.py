@@ -31,23 +31,24 @@ def create_fence_and_gate():
     if (dimensions[1] < 1080):
         dimensions[1] = dimensions[1] + (level * 8)
 
+    global fence_x1, fence_y1, fence_x2, fence_y2
     fence_x1 = (canvas_width / 2) - (dimensions[0] / 2)
     fence_y1 = (canvas_height / 2) - (dimensions[1] / 2)
     fence_x2 = (canvas_width / 2) + (dimensions[0] / 2)
     fence_y2 = (canvas_height / 2) + (dimensions[1] / 2)
-
     canvas.create_rectangle(fence_x1, fence_y1, fence_x2, fence_y2, fill="", outline="black", width=4)
 
+
 def spawn_sheep():
-    
     sheep_list = []
     for i in range (level):
         sheep = Ball(15, "white")
         sheep_list.append(sheep)
     for sheep in sheep_list:
-        x = randint(20,1900)
-        y = randint(20, 1060)
+        x = randint(int(fence_x1 + 30), int(fence_x2 - 30))
+        y = randint(int(fence_y1 + 30), int(fence_y2 - 30))
         sheep.place_ball(x, y)
+        
     
 
 
@@ -66,11 +67,13 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-level = 3
+level = 80
 
 player = Ball(10, "black")
 player.place_ball(canvas_width/2, canvas_height/2)
+
 create_fence_and_gate()
+
 spawn_sheep()
 
 window.bind('<Motion>', on_mouse_motion)
