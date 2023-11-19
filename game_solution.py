@@ -1,6 +1,7 @@
 #1920x1080
 
 import tkinter as tk
+from random import randint
 
 class Ball:
     def __init__(self, radius, colour):
@@ -23,7 +24,7 @@ class Ball:
         centre_y = (pos[1] + pos[3]) / 2
         return (centre_x, centre_y)
 
-def create_fence_and_gate(level):
+def create_fence_and_gate():
     dimensions = [400,225]
     if (dimensions[0] < 1920):
         dimensions[0] = dimensions[0] + (level * 15)
@@ -36,6 +37,18 @@ def create_fence_and_gate(level):
     fence_y2 = (canvas_height / 2) + (dimensions[1] / 2)
 
     canvas.create_rectangle(fence_x1, fence_y1, fence_x2, fence_y2, fill="", outline="black", width=4)
+
+def spawn_sheep():
+    
+    sheep_list = []
+    for i in range (level):
+        sheep = Ball(15, "white")
+        sheep_list.append(sheep)
+    for sheep in sheep_list:
+        x = randint(20,1900)
+        y = randint(20, 1060)
+        sheep.place_ball(x, y)
+    
 
 
 def on_mouse_motion(event):
@@ -53,11 +66,12 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-level = 1
+level = 3
 
-player = Ball(12, "black")
+player = Ball(10, "black")
 player.place_ball(canvas_width/2, canvas_height/2)
-create_fence_and_gate(level)
+create_fence_and_gate()
+spawn_sheep()
 
 window.bind('<Motion>', on_mouse_motion)
 
