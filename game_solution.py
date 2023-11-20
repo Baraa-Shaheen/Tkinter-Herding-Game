@@ -20,7 +20,7 @@ class Ball:
         self.id = canvas.create_oval(x1, y1, x2, y2, fill=self.colour)
 
     def remove(self):
-
+        canvas.delete(self.id)
         pass
 
     def get_centre(self):
@@ -59,7 +59,9 @@ class Sheep(Ball):
     def move(self, x, y):
         canvas.move(self.id, x, y)
         self.decelerate()
-        self.check_collision()
+        sheep_removed = self.check_gate_collision()
+        if(not sheep_removed):
+            self.check_fence_collision()
         self.idle()
 
 
@@ -75,14 +77,26 @@ class Sheep(Ball):
         self.speed_x *= 0.995
         self.speed_y *= 0.995
 
-    def check_collision(self):
+    def check_gate_collision(self):
+        sheep_coords = self.get_coords()
+
+        gate_y1 = canvas.coords(gate)[1]
+        gate_y2 = canvas.coords(gate)[3]
+
+        # If sheep has collided with right side of fence
+        if(sheep_coords[2] > fence_x2):
+            if(sheep_coords[1] > gate_y1 and sheep_coords[3] < gate_y2):
+                self.remove()
+                sheep_list.remove(self)
+                return True
+
+    def check_fence_collision(self):
         sheep_coords = self.get_coords()
 
         if(sheep_coords[0] < fence_x1 or sheep_coords[2] > fence_x2):
             self.speed_x = -self.speed_x
         if(sheep_coords[1] < fence_y1 or sheep_coords[3] > fence_y2):
             self.speed_y = -self.speed_y
-
 
         # Stop sheep from escaping fence
         if(sheep_coords[0] < fence_x1):
@@ -124,12 +138,13 @@ class Sheep(Ball):
             self.speed_y = 0.4 * multiplier
 
 
+
 def create_fence():
     fence_dimensions = [400,225]
     if (fence_dimensions[0] < 1920):
-        fence_dimensions[0] = fence_dimensions[0] + (level * 15)
+        fence_dimensions[0] = fence_dimensions[0] + (level * 10)
     if (fence_dimensions[1] < 1080):
-        fence_dimensions[1] = fence_dimensions[1] + (level * 8)
+        fence_dimensions[1] = fence_dimensions[1] + (level * 6)
 
     global fence_x1, fence_y1, fence_x2, fence_y2
     fence_x1 = (canvas_width / 2) - (fence_dimensions[0] / 2)
@@ -184,7 +199,7 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-level = 50
+level = 30
 
 player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
