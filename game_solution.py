@@ -25,6 +25,9 @@ class Ball:
         centre_y = (pos[1] + pos[3]) / 2
         return (centre_x, centre_y)
     
+    def move(self, x, y):
+        canvas.move(self.id, x, y)
+    
 
 class Player(Ball):
     def repel(self, repelling_distance):
@@ -38,7 +41,8 @@ class Player(Ball):
                 vector_j = sheep_pos[1] - player_pos[1]
                 vector_magnitude = sqrt(vector_i**2 + vector_j**2)
                 unit_vector = [vector_i / vector_magnitude, vector_j / vector_magnitude]
-                canvas.move(sheep.id, unit_vector[0], unit_vector[1])
+                sheep.speed_x = unit_vector[0]
+                sheep.speed_y = unit_vector[1]
 
 
 def create_fence_and_gate():
@@ -72,12 +76,14 @@ def spawn_sheep():
 def on_mouse_motion(event):
     x = player.get_position()[0]
     y = player.get_position()[1]
-    canvas.move(player.id, event.x - x, event.y - y)
+    player.move(event.x - x, event.y - y)
 
 
 def update_game():
     player.repel(100)
-    window.after(1, update_game)
+    for sheep in sheep_list:
+        sheep.move(sheep.speed_x, sheep.speed_y)
+    window.after(10, update_game)
 
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
