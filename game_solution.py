@@ -19,7 +19,7 @@ class Ball:
         y2 = y + self.radius
         self.id = canvas.create_oval(x1, y1, x2, y2, fill=self.colour)
 
-    def get_position(self):
+    def get_centre(self):
         pos = canvas.coords(self.id)
         centre_x = (pos[0] + pos[2]) / 2
         centre_y = (pos[1] + pos[3]) / 2
@@ -35,8 +35,8 @@ class Player(Ball):
     
     def repel(self, repelling_distance):
         for sheep in sheep_list:
-            player_pos = player.get_position()
-            sheep_pos = sheep.get_position()
+            player_pos = player.get_centre()
+            sheep_pos = sheep.get_centre()
             distance = sqrt((sheep_pos[0] - player_pos[0])**2 + (sheep_pos[1] - player_pos[1])**2)
 
             if (distance <= repelling_distance):
@@ -49,16 +49,34 @@ class Player(Ball):
 
 
 class Sheep(Ball):
-    def __init__(self, radius = 15, colour = "white"):
+    def __init__(self, radius = 20, colour = "white"):
         super().__init__(radius, colour)
 
     def move(self, x, y):
         canvas.move(self.id, x, y)
         self.decelerate()
+        self.check_collision()
+
+    def get_coords(self):
+        sheep_coords = []
+        sheep_coords.append(canvas.coords(self.id)[0])
+        sheep_coords.append(canvas.coords(self.id)[1])
+        sheep_coords.append(canvas.coords(self.id)[2])
+        sheep_coords.append(canvas.coords(self.id)[3])
+        return sheep_coords
     
     def decelerate(self):
         self.speed_x *= 0.99
         self.speed_y *= 0.99
+
+    def check_collision(self):
+        sheep_coords = self.get_coords()
+
+        if(sheep_coords[0] < fence_x1 or sheep_coords[2] > fence_x2):
+            self.speed_x = -self.speed_x
+        if(sheep_coords[1] < fence_y1 or sheep_coords[3] > fence_y2):
+            self.speed_y = -self.speed_y
+
 
 def create_fence_and_gate():
     dimensions = [400,225]
@@ -89,8 +107,8 @@ def spawn_sheep():
 
 
 def on_mouse_motion(event):
-    x = player.get_position()[0]
-    y = player.get_position()[1]
+    x = player.get_centre()[0]
+    y = player.get_centre()[1]
     player.move(event.x - x, event.y - y)
 
 
