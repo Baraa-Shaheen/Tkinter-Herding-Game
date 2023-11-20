@@ -49,7 +49,8 @@ class Player(Ball):
 
 
 class Sheep(Ball):
-    pass
+    def __init__(self, radius = 15, colour = "white"):
+        super().__init__(radius, colour)
 
 
 def create_fence_and_gate():
@@ -72,7 +73,7 @@ def spawn_sheep():
     global sheep_list
     sheep_list = []
     for i in range (level):
-        sheep = Sheep(15, "white")
+        sheep = Sheep()
         sheep_list.append(sheep)
     for sheep in sheep_list:
         x = randint(int(fence_x1 + 30), int(fence_x2 - 30))
@@ -90,7 +91,7 @@ def update_game():
     player.repel(100)
     for sheep in sheep_list:
         sheep.move(sheep.speed_x, sheep.speed_y)
-    window.after(10, update_game)
+    window.after(5, update_game)
 
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
