@@ -6,8 +6,6 @@ from math import sqrt
 
 class Ball:
     def __init__(self, radius, colour):
-        self.x_speed = 0
-        self.y_speed = 0
         self.radius = radius
         self.colour = colour
         self.id = None
@@ -31,7 +29,9 @@ class Player(Ball):
             sheep_pos = sheep.get_position()
             distance = sqrt((sheep_pos[0] - player_pos[0])**2 + (sheep_pos[1] - player_pos[1])**2)
             if (distance <= repelling_distance):
-                canvas.move(sheep.id, sheep_pos[0] - player_pos[0], sheep_pos[1] - player_pos[1])
+                direction_x = sheep_pos[0] - player_pos[0]
+                direction_y = sheep_pos[1] - player_pos[1]
+                canvas.move(sheep.id, direction_x, direction_y)
 
 
 def create_fence_and_gate():
@@ -69,7 +69,7 @@ def on_mouse_motion(event):
 
 
 def update_game():
-    player.repel(40)
+    player.repel(100)
     window.after(10, update_game)
 
 # Create 1920x1080 window with green canvas
@@ -81,7 +81,7 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-level = 2
+level = 10
 
 player = Player(10, "black")
 player.place_ball(canvas_width / 2, canvas_height / 2)
