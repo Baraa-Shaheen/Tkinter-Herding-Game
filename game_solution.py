@@ -6,6 +6,8 @@ from math import sqrt
 
 class Ball:
     def __init__(self, radius, colour):
+        self.speed_x = 0
+        self.speed_y = 0
         self.radius = radius
         self.colour = colour
         self.id = None
@@ -22,16 +24,21 @@ class Ball:
         centre_x = (pos[0] + pos[2]) / 2
         centre_y = (pos[1] + pos[3]) / 2
         return (centre_x, centre_y)
+    
+
 class Player(Ball):
     def repel(self, repelling_distance):
         for sheep in sheep_list:
             player_pos = player.get_position()
             sheep_pos = sheep.get_position()
             distance = sqrt((sheep_pos[0] - player_pos[0])**2 + (sheep_pos[1] - player_pos[1])**2)
+
             if (distance <= repelling_distance):
-                direction_x = sheep_pos[0] - player_pos[0]
-                direction_y = sheep_pos[1] - player_pos[1]
-                canvas.move(sheep.id, direction_x, direction_y)
+                vector_i = sheep_pos[0] - player_pos[0]
+                vector_j = sheep_pos[1] - player_pos[1]
+                vector_magnitude = sqrt(vector_i**2 + vector_j**2)
+                unit_vector = [vector_i / vector_magnitude, vector_j / vector_magnitude]
+                canvas.move(sheep.id, unit_vector[0], unit_vector[1])
 
 
 def create_fence_and_gate():
@@ -70,7 +77,7 @@ def on_mouse_motion(event):
 
 def update_game():
     player.repel(100)
-    window.after(10, update_game)
+    window.after(1, update_game)
 
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
@@ -81,7 +88,7 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-level = 10
+level = 50
 
 player = Player(10, "black")
 player.place_ball(canvas_width / 2, canvas_height / 2)
