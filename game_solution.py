@@ -66,8 +66,8 @@ class Sheep(Ball):
         return sheep_coords
     
     def decelerate(self):
-        self.speed_x *= 0.99
-        self.speed_y *= 0.99
+        self.speed_x *= 0.995
+        self.speed_y *= 0.995
 
     def check_collision(self):
         sheep_coords = self.get_coords()
@@ -76,6 +76,27 @@ class Sheep(Ball):
             self.speed_x = -self.speed_x
         if(sheep_coords[1] < fence_y1 or sheep_coords[3] > fence_y2):
             self.speed_y = -self.speed_y
+
+        if(sheep_coords[0] < fence_x1):
+            sheep_coords = self.get_coords()
+            sheep_fence_distance = fence_x1 - sheep_coords[0]
+            canvas.coords(self.id, sheep_coords[0] + sheep_fence_distance, sheep_coords[1], sheep_coords[2] + sheep_fence_distance, sheep_coords[3])
+
+        if(sheep_coords[1] < fence_y1):
+            sheep_coords = self.get_coords()
+            sheep_fence_distance = fence_y1 - sheep_coords[1]
+            canvas.coords(self.id, sheep_coords[0], sheep_coords[1] + sheep_fence_distance, sheep_coords[2], sheep_coords[3] + sheep_fence_distance)
+
+        if(sheep_coords[2] > fence_x2):
+            sheep_coords = self.get_coords()
+            sheep_fence_distance = sheep_coords[2] - fence_x2
+            canvas.coords(self.id, sheep_coords[0] - sheep_fence_distance, sheep_coords[1], sheep_coords[2] - sheep_fence_distance, sheep_coords[3])
+
+        if(sheep_coords[3] > fence_y2):
+            sheep_coords = self.get_coords()
+            sheep_fence_distance = sheep_coords[3] - fence_y2
+            canvas.coords(self.id, sheep_coords[0], sheep_coords[1] - sheep_fence_distance, sheep_coords[2], sheep_coords[3] - sheep_fence_distance)
+
 
 
 def create_fence_and_gate():
