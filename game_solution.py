@@ -52,6 +52,13 @@ class Sheep(Ball):
     def __init__(self, radius = 15, colour = "white"):
         super().__init__(radius, colour)
 
+    def move(self, x, y):
+        canvas.move(self.id, x, y)
+        self.decelerate()
+    
+    def decelerate(self):
+        self.speed_x *= 0.99
+        self.speed_y *= 0.99
 
 def create_fence_and_gate():
     dimensions = [400,225]
