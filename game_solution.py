@@ -12,7 +12,7 @@ class Ball:
         self.colour = colour
         self.id = None
     
-    def place_ball(self, x, y):
+    def place(self, x, y):
         x1 = x - self.radius
         y1 = y - self.radius
         x2 = x + self.radius
@@ -45,6 +45,10 @@ class Player(Ball):
                 sheep.speed_y = unit_vector[1]
 
 
+class Sheep(Ball):
+    pass
+
+
 def create_fence_and_gate():
     dimensions = [400,225]
     if (dimensions[0] < 1920):
@@ -65,12 +69,12 @@ def spawn_sheep():
     global sheep_list
     sheep_list = []
     for i in range (level):
-        sheep = Ball(15, "white")
+        sheep = Sheep(15, "white")
         sheep_list.append(sheep)
     for sheep in sheep_list:
         x = randint(int(fence_x1 + 30), int(fence_x2 - 30))
         y = randint(int(fence_y1 + 30), int(fence_y2 - 30))
-        sheep.place_ball(x, y)
+        sheep.place(x, y)
 
 
 def on_mouse_motion(event):
@@ -97,7 +101,7 @@ canvas.pack()
 level = 50
 
 player = Player(10, "black")
-player.place_ball(canvas_width / 2, canvas_height / 2)
+player.place(canvas_width / 2, canvas_height / 2)
 
 create_fence_and_gate()
 spawn_sheep()
