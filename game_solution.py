@@ -1,7 +1,7 @@
 #1920x1080
 
 import tkinter as tk
-from random import randint
+from random import randint, uniform
 from math import sqrt
 
 class Ball:
@@ -56,6 +56,8 @@ class Sheep(Ball):
         canvas.move(self.id, x, y)
         self.decelerate()
         self.check_collision()
+        self.idle()
+
 
     def get_coords(self):
         sheep_coords = []
@@ -77,6 +79,8 @@ class Sheep(Ball):
         if(sheep_coords[1] < fence_y1 or sheep_coords[3] > fence_y2):
             self.speed_y = -self.speed_y
 
+
+        # Stop sheep from escaping fence
         if(sheep_coords[0] < fence_x1):
             sheep_coords = self.get_coords()
             sheep_fence_distance = fence_x1 - sheep_coords[0]
@@ -97,6 +101,23 @@ class Sheep(Ball):
             sheep_fence_distance = sheep_coords[3] - fence_y2
             canvas.coords(self.id, sheep_coords[0], sheep_coords[1] - sheep_fence_distance, sheep_coords[2], sheep_coords[3] - sheep_fence_distance)
 
+
+    def idle(self):
+        speed = sqrt(self.speed_x**2 + self.speed_y**2)
+        if(speed < 0.5):
+            direction_x = randint(0,1)
+            direction_y = randint(0,1)
+            if(direction_x == 0):
+                multiplier = -1
+            else:
+                multiplier = 1
+            self.speed_x = 0.4 * multiplier
+
+            if(direction_y == 0):
+                multiplier = -1
+            else:
+                multiplier = 1
+            self.speed_y = 0.4 * multiplier
 
 
 def create_fence_and_gate():
