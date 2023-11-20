@@ -30,6 +30,9 @@ class Ball:
     
 
 class Player(Ball):
+    def __init__(self, radius = 10, colour = "black"):
+        super().__init__(radius, colour)
+    
     def repel(self, repelling_distance):
         for sheep in sheep_list:
             player_pos = player.get_position()
@@ -100,7 +103,7 @@ canvas.pack()
 
 level = 50
 
-player = Player(10, "black")
+player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
 
 create_fence_and_gate()
