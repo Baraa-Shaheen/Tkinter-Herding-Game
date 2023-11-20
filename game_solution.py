@@ -27,8 +27,8 @@ class Ball:
     
     def move(self, x, y):
         canvas.move(self.id, x, y)
-    
 
+    
 class Player(Ball):
     def __init__(self, radius = 10, colour = "black"):
         super().__init__(radius, colour)
@@ -103,6 +103,7 @@ def update_game():
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
 window.geometry("1920x1080")
+window.title("Sheep Herding Game")
 # window.attributes("-fullscreen", True)
 canvas_width = 1920
 canvas_height = 1080
