@@ -19,6 +19,10 @@ class Ball:
         y2 = y + self.radius
         self.id = canvas.create_oval(x1, y1, x2, y2, fill=self.colour)
 
+    def remove(self):
+
+        pass
+
     def get_centre(self):
         pos = canvas.coords(self.id)
         centre_x = (pos[0] + pos[2]) / 2
@@ -120,20 +124,30 @@ class Sheep(Ball):
             self.speed_y = 0.4 * multiplier
 
 
-def create_fence_and_gate():
-    dimensions = [400,225]
-    if (dimensions[0] < 1920):
-        dimensions[0] = dimensions[0] + (level * 15)
-    if (dimensions[1] < 1080):
-        dimensions[1] = dimensions[1] + (level * 8)
+def create_fence():
+    fence_dimensions = [400,225]
+    if (fence_dimensions[0] < 1920):
+        fence_dimensions[0] = fence_dimensions[0] + (level * 15)
+    if (fence_dimensions[1] < 1080):
+        fence_dimensions[1] = fence_dimensions[1] + (level * 8)
 
     global fence_x1, fence_y1, fence_x2, fence_y2
-    fence_x1 = (canvas_width / 2) - (dimensions[0] / 2)
-    fence_y1 = (canvas_height / 2) - (dimensions[1] / 2)
-    fence_x2 = (canvas_width / 2) + (dimensions[0] / 2)
-    fence_y2 = (canvas_height / 2) + (dimensions[1] / 2)
+    fence_x1 = (canvas_width / 2) - (fence_dimensions[0] / 2)
+    fence_y1 = (canvas_height / 2) - (fence_dimensions[1] / 2)
+    fence_x2 = (canvas_width / 2) + (fence_dimensions[0] / 2)
+    fence_y2 = (canvas_height / 2) + (fence_dimensions[1] / 2)
 
     canvas.create_rectangle(fence_x1, fence_y1, fence_x2, fence_y2, fill="", outline="black", width=4)
+
+    
+def create_gate():
+    x1 = fence_x2 - 2
+    y1 = (canvas_height / 2) - 50
+    x2 = fence_x2 + 10
+    y2 = (canvas_height / 2) + 50
+
+    global gate
+    gate = canvas.create_rectangle(x1, y1, x2, y2, fill="green", outline = "green", width = 0)
 
 
 def spawn_sheep():
@@ -175,7 +189,8 @@ level = 50
 player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
 
-create_fence_and_gate()
+create_fence()
+create_gate()
 spawn_sheep()
 update_game()
 
