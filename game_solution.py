@@ -248,6 +248,12 @@ def update_ui(update_level_text = True, update_time_remaining_text = True, updat
             score_text = canvas.create_text(canvas_width - 50, 0, text = f"Score: {score}", font = ("Calibri", 30), fill = "white", anchor = "ne")
     
 
+def remove_ui():
+    canvas.delete(level_text)
+    canvas.delete(time_remaining_text)
+    canvas.delete(score_text)
+
+
 def check_level_completed():
     global level_completed, level
     if len(sheep_list) == 0:
@@ -259,12 +265,13 @@ def check_level_completed():
 def update_timer():
     global time_remaining, game_over
     
-    if(time_remaining > 0):
-        time_remaining -= 1
-        update_ui(False, True, False)
-    if(time_remaining == 0):
-        game_over = True
-        end_game()
+    if(game_running):
+        if(time_remaining > 0):
+            time_remaining -= 1
+            update_ui(False, True, False)
+        if(time_remaining == 0):
+            game_over = True
+            end_game()
     
     if(not game_paused):
         window.after(1000, update_timer)
@@ -333,6 +340,7 @@ def toggle_pause_menu():
         resume_button.destroy()
         save_game_button.destroy()
         main_menu_button.destroy()
+        
 
 def show_main_menu():
      global main_menu_button_list
@@ -370,6 +378,7 @@ def hide_main_menu():
 def end_game():
     global game_running
     game_running = False
+
     game_over_text = canvas.create_text(canvas_width / 2, 75, text = f"Game Over!", font = ("Calibri", 50), fill = "white", anchor = "n")
     show_game_over_menu()
     #...
@@ -379,11 +388,26 @@ def show_game_over_menu():
     
     pass
 
+
+def remove_all_elements():
+    remove_ui()
+    remove_ui()
+    for sheep in sheep_list:
+        sheep.remove()
+    canvas.delete(fence)
+    canvas.delete(gate)
+    
+
+
 def return_to_main_menu():
-    toggle_pause_game()
-    global game_over
+    # toggle_pause_game()
+    global game_over, game_running, game_paused
     game_over = True
-    pass
+    game_running = False
+    game_paused = False
+    toggle_pause_menu()
+    remove_all_elements()
+    show_main_menu()
 
 
 def save_game():
@@ -410,8 +434,10 @@ def exit_game():
     window.destroy()
 
 def start_game():
-    global game_running
+    global game_running, level, score
     game_running = True
+    level = 1
+    score = 0
     hide_main_menu()
     start_new_level()
     update_timer()
