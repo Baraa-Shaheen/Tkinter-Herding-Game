@@ -6,8 +6,8 @@ from math import sqrt
 
 class Ball:
     def __init__(self, radius, colour):
-        self.speed_x = 0
-        self.speed_y = 0
+        self.velocity_x = 0
+        self.velocity_y = 0
         self.radius = radius
         self.colour = colour
         self.hidden_state = "normal"
@@ -51,8 +51,8 @@ class Player(Ball):
                 vector_j = sheep_pos[1] - player_pos[1]
                 vector_magnitude = sqrt(vector_i**2 + vector_j**2)
                 unit_vector = [vector_i / vector_magnitude, vector_j / vector_magnitude]
-                sheep.speed_x = unit_vector[0] * 2.5
-                sheep.speed_y = unit_vector[1] * 2.5
+                sheep.velocity_x = unit_vector[0] * 2.5
+                sheep.velocity_y = unit_vector[1] * 2.5
 
     def toggle_hide(self):
         # If player is hidden
@@ -91,8 +91,8 @@ class Sheep(Ball):
         return sheep_coords
     
     def decelerate(self):
-        self.speed_x *= 0.99
-        self.speed_y *= 0.99
+        self.velocity_x *= 0.99
+        self.velocity_y *= 0.99
 
     def check_gate_collision(self):
         global time_remaining
@@ -120,9 +120,9 @@ class Sheep(Ball):
         sheep_coords = self.get_coords()
 
         if(sheep_coords[0] < fence_x1 or sheep_coords[2] > fence_x2):
-            self.speed_x = -self.speed_x
+            self.velocity_x = -self.velocity_x
         if(sheep_coords[1] < fence_y1 or sheep_coords[3] > fence_y2):
-            self.speed_y = -self.speed_y
+            self.velocity_y = -self.velocity_y
 
         # Stop sheep from escaping fence
         if(sheep_coords[0] < fence_x1):
@@ -147,7 +147,7 @@ class Sheep(Ball):
 
 
     def idle(self):
-        speed = sqrt(self.speed_x**2 + self.speed_y**2)
+        speed = sqrt(self.velocity_x**2 + self.velocity_y**2)
         if(speed < 0.5):
             direction_x = randint(0,1)
             direction_y = randint(0,1)
@@ -155,13 +155,13 @@ class Sheep(Ball):
                 multiplier = -1
             else:
                 multiplier = 1
-            self.speed_x = 0.4 * multiplier
+            self.velocity_x = 0.4 * multiplier
 
             if(direction_y == 0):
                 multiplier = -1
             else:
                 multiplier = 1
-            self.speed_y = 0.4 * multiplier
+            self.velocity_y = 0.4 * multiplier
 
 
 
@@ -293,7 +293,7 @@ def on_mouse_motion(event):
 def update_game():
     player.repel(100)
     for sheep in sheep_list:
-        sheep.move(sheep.speed_x, sheep.speed_y)
+        sheep.move(sheep.velocity_x, sheep.velocity_y)
     if(not game_paused):
         window.after(15, update_game)
 
