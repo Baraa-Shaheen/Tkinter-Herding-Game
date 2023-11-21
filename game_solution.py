@@ -347,10 +347,10 @@ def show_main_menu():
      leaderboard_button = tk.Button(canvas, text = "Leaderboard", font = ("Calibri", 40), width = 15, command = show_leaderboard)
      main_menu_button_list.append(leaderboard_button)
 
-     controls_button = tk.Button(canvas, text = "Options", font = ("Calibri", 40), width = 15, command = show_controls_menu)
+     controls_button = tk.Button(canvas, text = "Controls", font = ("Calibri", 40), width = 15, command = show_controls_menu)
      main_menu_button_list.append(controls_button)
 
-     exit_game_button = tk.Button(canvas, text = "Main Menu", font = ("Calibri", 40), width = 15, command = exit_game)
+     exit_game_button = tk.Button(canvas, text = "Exit Game", font = ("Calibri", 40), width = 15, command = exit_game)
      main_menu_button_list.append(exit_game_button)
 
      start_game_button.place(x = (canvas_width / 2 - 208), y = 275)
@@ -407,8 +407,7 @@ def show_controls_menu():
 
 
 def exit_game():
-
-    pass
+    window.destroy()
 
 def start_game():
     global game_running
