@@ -301,11 +301,12 @@ def start_new_level():
 def toggle_pause_game():
     global game_paused
 
-    if(not game_paused):
-        game_paused = True
-        toggle_pause_menu()
-    else:
-        unpause_game()
+    if(game_running):
+        if(not game_paused):
+            game_paused = True
+            toggle_pause_menu()
+        else:
+            unpause_game()
 
  
 def unpause_game():
@@ -367,10 +368,16 @@ def hide_main_menu():
 
 
 def end_game():
+    global game_running
+    game_running = False
     game_over_text = canvas.create_text(canvas_width / 2, 75, text = f"Game Over!", font = ("Calibri", 50), fill = "white", anchor = "n")
+    show_game_over_menu()
     #...
 
 
+def show_game_over_menu():
+    
+    pass
 
 def return_to_main_menu():
     toggle_pause_game()
@@ -404,6 +411,8 @@ def exit_game():
     pass
 
 def start_game():
+    global game_running
+    game_running = True
     hide_main_menu()
     start_new_level()
     update_timer()
@@ -425,12 +434,12 @@ time_remaining = 15
 score = 0
 game_over = False
 game_paused = False
+game_running = False
 
 player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
 
 show_main_menu()
-# start_game()
 
 window.bind('<Motion>', on_mouse_motion)
 window.bind("<Escape>", lambda event: toggle_pause_game())
