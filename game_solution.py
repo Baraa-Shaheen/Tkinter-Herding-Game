@@ -48,8 +48,8 @@ class Player(Ball):
                 vector_j = sheep_pos[1] - player_pos[1]
                 vector_magnitude = sqrt(vector_i**2 + vector_j**2)
                 unit_vector = [vector_i / vector_magnitude, vector_j / vector_magnitude]
-                sheep.speed_x = unit_vector[0]
-                sheep.speed_y = unit_vector[1]
+                sheep.speed_x = unit_vector[0] * 2.5
+                sheep.speed_y = unit_vector[1] * 2.5
 
 
 
@@ -80,8 +80,8 @@ class Sheep(Ball):
         return sheep_coords
     
     def decelerate(self):
-        self.speed_x *= 0.995
-        self.speed_y *= 0.995
+        self.speed_x *= 0.99
+        self.speed_y *= 0.99
 
     def check_gate_collision(self):
         global time_remaining
@@ -265,7 +265,7 @@ def update_game():
     player.repel(100)
     for sheep in sheep_list:
         sheep.move(sheep.speed_x, sheep.speed_y)
-    window.after(5, update_game)
+    window.after(15, update_game)
 
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
