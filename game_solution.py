@@ -223,28 +223,33 @@ def update_ui(update_level_text = True, update_time_remaining_text = True, updat
         level_text
     except NameError:
         level_text = canvas.create_text(50, 0, text = f"Level: {level}", font = ("Calibri", 30), fill = "white", anchor = "nw")
+    else:
+        if(update_level_text):
+            canvas.delete(level_text)
+            level_text = canvas.create_text(50, 0, text = f"Level: {level}", font = ("Calibri", 30), fill = "white", anchor = "nw")
 
     try:
         time_remaining_text
     except NameError:
         time_remaining_text = canvas.create_text(canvas_width / 2, 0, text = f"{time_remaining}", font = ("Calibri", 60), fill = "white", anchor = "n")
+    else:
+         if(update_time_remaining_text):
+            canvas.delete(time_remaining_text)
+            time_remaining_text = canvas.create_text(canvas_width / 2, 0, text = f"{time_remaining}", font = ("Calibri", 60), fill = "white", anchor = "n")
 
     try:
         score_text
     except NameError:
         score_text = canvas.create_text(canvas_width - 50, 0, text = f"Score: {score}", font = ("Calibri", 30), fill = "white", anchor = "ne")
+    else:
+        if(update_score_text):
+            canvas.delete(score_text)
+            score_text = canvas.create_text(canvas_width - 50, 0, text = f"Score: {score}", font = ("Calibri", 30), fill = "white", anchor = "ne")
+    
 
-    if(update_level_text):
-        canvas.delete(level_text)
-        level_text = canvas.create_text(50, 0, text = f"Level: {level}", font = ("Calibri", 30), fill = "white", anchor = "nw")
+   
 
-    if(update_time_remaining_text):
-        canvas.delete(time_remaining_text)
-        time_remaining_text = canvas.create_text(canvas_width / 2, 0, text = f"{time_remaining}", font = ("Calibri", 60), fill = "white", anchor = "n")
-
-    if(update_score_text):
-        canvas.delete(score_text)
-        score_text = canvas.create_text(canvas_width - 50, 0, text = f"Score: {score}", font = ("Calibri", 30), fill = "white", anchor = "ne")
+    
 
 
 def check_level_completed():
