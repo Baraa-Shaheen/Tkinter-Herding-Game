@@ -268,7 +268,9 @@ def update_timer():
         update_ui(False, True, False)
     if(time_remaining == 0):
         game_over = True
-    window.after(1000, update_timer)
+    
+    if(not game_paused):
+        window.after(1000, update_timer)
 
 
 def add_to_score(value):
@@ -286,7 +288,26 @@ def update_game():
     player.repel(100)
     for sheep in sheep_list:
         sheep.move(sheep.speed_x, sheep.speed_y)
-    window.after(15, update_game)
+    if(not game_paused):
+        window.after(15, update_game)
+
+def start_new_level():
+    global time_remaining
+    time_remaining = 15
+    update_ui()
+    create_fence()
+    create_gate()
+    spawn_sheep()
+
+def pause_game():
+    global game_paused
+    game_paused = True
+    update_game()
+
+def unpause_game():
+    global game_paused
+    game_paused = False
+    update_game()
 
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
@@ -302,24 +323,17 @@ level = 1
 time_remaining = 30
 score = 0
 game_over = False
+game_paused = False
 
 player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
-
-def start_new_level():
-    global time_remaining
-    time_remaining = 30
-    update_ui()
-    create_fence()
-    create_gate()
-    spawn_sheep()
-
 
 start_new_level()
 update_timer()
 update_game()
 
-
 window.bind('<Motion>', on_mouse_motion)
+window.bind("<Escape>", lambda event: pause_game())
+
 
 window.mainloop()
