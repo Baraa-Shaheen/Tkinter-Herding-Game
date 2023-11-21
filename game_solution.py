@@ -10,6 +10,7 @@ class Ball:
         self.speed_y = 0
         self.radius = radius
         self.colour = colour
+        self.hidden_state = "normal"
         self.id = None
     
     def place(self, x, y):
@@ -17,7 +18,8 @@ class Ball:
         y1 = y - self.radius
         x2 = x + self.radius
         y2 = y + self.radius
-        self.id = canvas.create_oval(x1, y1, x2, y2, fill=self.colour)
+
+        self.id = canvas.create_oval(x1, y1, x2, y2, fill=self.colour, state = f"{self.hidden_state}")
 
     def remove(self):
         canvas.delete(self.id)
@@ -36,6 +38,7 @@ class Ball:
 class Player(Ball):
     def __init__(self, radius = 10, colour = "black"):
         super().__init__(radius, colour)
+        self.hidden_state = "hidden"
     
     def repel(self, repelling_distance):
         for sheep in sheep_list:
@@ -50,6 +53,14 @@ class Player(Ball):
                 unit_vector = [vector_i / vector_magnitude, vector_j / vector_magnitude]
                 sheep.speed_x = unit_vector[0] * 2.5
                 sheep.speed_y = unit_vector[1] * 2.5
+
+    def toggle_hide(self):
+        # If player is hidden
+        if (self.hidden):
+            # Show player
+            canvas.itemconfig(self.id, state = "normal")
+        else:
+            canvas.itemconfig(self.id, state = "hidden")
 
 
 
@@ -300,6 +311,8 @@ def pause_game():
         unpause_game()
     else:
         game_paused = True
+
+        
 
 def unpause_game():
     global game_paused
