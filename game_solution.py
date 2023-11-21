@@ -52,9 +52,14 @@ class Player(Ball):
                 sheep.speed_y = unit_vector[1]
 
 
+
+# add super sheep 
 class Sheep(Ball):
-    def __init__(self, radius = 20, colour = "white"):
+    def __init__(self, radius = 20, colour = "white", is_super = False):
+        if(is_super):
+            radius = radius * 1.3
         super().__init__(radius, colour)
+        self.is_super = is_super
 
     def move(self, x, y):
         canvas.move(self.id, x, y)
@@ -142,6 +147,7 @@ class Sheep(Ball):
 
 
 
+
 def create_fence():
     fence_dimensions = [400,225]
     if (fence_dimensions[0] < 1920):
@@ -160,9 +166,9 @@ def create_fence():
     
 def create_gate():
     x1 = fence_x2 - 2
-    y1 = (canvas_height / 2) - 50
+    y1 = (canvas_height / 2) - 75
     x2 = fence_x2 + 10
-    y2 = (canvas_height / 2) + 50
+    y2 = (canvas_height / 2) + 75
 
     global gate
     gate = canvas.create_rectangle(x1, y1, x2, y2, fill="green", outline = "green", width = 0)
@@ -171,9 +177,16 @@ def create_gate():
 def spawn_sheep():
     global sheep_list
     sheep_list = []
+    
     for i in range (level):
-        sheep = Sheep()
-        sheep_list.append(sheep)
+        # 10% chance of sheep being super sheep
+        x = randint(0,9)
+        if(x != 0):
+            sheep = Sheep()
+            sheep_list.append(sheep)
+        else:
+            sheep = Sheep(is_super = True)
+            sheep_list.append(sheep)
     for sheep in sheep_list:
         x = randint(int(fence_x1 + 30), int(fence_x2 - 30))
         y = randint(int(fence_y1 + 30), int(fence_y2 - 30))
@@ -210,9 +223,11 @@ def update_ui(update_level_text = True, update_time_remaining_text = True, updat
         canvas.delete(score_text)
         score_text = canvas.create_text(canvas_width - 50, 0, text = f"Score: {score}", font = ("Calibri", 30), fill = "white", anchor = "ne")
 
+
 def check_level_completed():
     
     pass
+
 
 def update_timer():
     global time_remaining
@@ -222,15 +237,17 @@ def update_timer():
         update_ui(False, True, False)
     window.after(1000, update_timer)
 
+
 def add_to_score():
     global score
     score += 10
-    
+
 
 def on_mouse_motion(event):
     x = player.get_centre()[0]
     y = player.get_centre()[1]
     player.move(event.x - x, event.y - y)
+
 
 def update_game():
     player.repel(100)
@@ -248,7 +265,7 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-level = 5
+level = 35
 time_remaining = 30
 score = 0
 
