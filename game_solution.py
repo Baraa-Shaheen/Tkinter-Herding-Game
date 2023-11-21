@@ -54,17 +54,7 @@ class Player(Ball):
                 sheep.velocity_x = unit_vector[0] * 2.5
                 sheep.velocity_y = unit_vector[1] * 2.5
 
-    def toggle_hide(self):
-        # If player is hidden
-        if (self.hidden):
-            # Show player
-            canvas.itemconfig(self.id, state = "normal")
-        else:
-            canvas.itemconfig(self.id, state = "hidden")
 
-
-
-# add super sheep 
 class Sheep(Ball):
     def __init__(self, radius = 20, colour = "white", value = 10, is_super = False):
         if(is_super):
@@ -297,6 +287,7 @@ def update_game():
     if(not game_paused):
         window.after(15, update_game)
 
+
 def start_new_level():
     global time_remaining
     time_remaining = 15
@@ -305,20 +296,53 @@ def start_new_level():
     create_gate()
     spawn_sheep()
 
-def pause_game():
+
+def toggle_pause_game():
     global game_paused
-    if(game_paused):
-        unpause_game()
-    else:
+
+    if(not game_paused):
         game_paused = True
+        toggle_pause_menu()
+    else:
+        unpause_game()
 
-        
-
+ 
 def unpause_game():
     global game_paused
     game_paused = False
+    toggle_pause_menu()
     update_timer()
     update_game()
+    
+
+def toggle_pause_menu():
+    global resume_button, save_game_button, main_menu_button
+
+    if(game_paused):
+        resume_button = tk.Button(canvas, text = "Resume", font = ("Calibri", 40), width = 15, command = toggle_pause_game)
+        save_game_button = tk.Button(canvas, text = "Save Game", font = ("Calibri", 40), width = 15, command = save_game)
+        main_menu_button = tk.Button(canvas, text = "Main Menu", font = ("Calibri", 40), width = 15, command = return_to_main_menu)
+
+        resume_button.place(x = (canvas_width / 2 - 208), y = 250)
+        save_game_button.place(x = (canvas_width / 2) - 208, y = 400)
+        main_menu_button.place(x = (canvas_width / 2) - 208, y = 550)
+
+    else:
+        resume_button.destroy()
+        save_game_button.destroy()
+        main_menu_button.destroy()
+
+
+def return_to_main_menu():
+
+    pass
+
+
+def save_game():
+
+    pass
+
+
 
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
@@ -331,7 +355,7 @@ canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
 level = 1
-time_remaining = 30
+time_remaining = 15
 score = 0
 game_over = False
 game_paused = False
@@ -344,7 +368,7 @@ update_timer()
 update_game()
 
 window.bind('<Motion>', on_mouse_motion)
-window.bind("<Escape>", lambda event: pause_game())
+window.bind("<Escape>", lambda event: toggle_pause_game())
 
 
 window.mainloop()
