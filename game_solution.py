@@ -55,11 +55,13 @@ class Player(Ball):
 
 # add super sheep 
 class Sheep(Ball):
-    def __init__(self, radius = 20, colour = "white", is_super = False):
+    def __init__(self, radius = 20, colour = "white", value = 10, is_super = False):
         if(is_super):
             radius = radius * 1.3
+            value = value * 2
         super().__init__(radius, colour)
         self.is_super = is_super
+        self.value = value
 
     def move(self, x, y):
         canvas.move(self.id, x, y)
@@ -92,7 +94,10 @@ class Sheep(Ball):
             if(sheep_coords[1] > gate_y1 and sheep_coords[3] < gate_y2):
                 self.remove()
                 sheep_list.remove(self)
-                add_to_score()
+                if(self.is_super):
+                    add_to_score(self.value)
+                else:
+                    add_to_score(self.value)
                 # canvas.delete(score_text)
                 update_ui(False, False, True)
                 check_level_completed()
@@ -238,9 +243,9 @@ def update_timer():
     window.after(1000, update_timer)
 
 
-def add_to_score():
+def add_to_score(value):
     global score
-    score += 10
+    score += value
 
 
 def on_mouse_motion(event):
