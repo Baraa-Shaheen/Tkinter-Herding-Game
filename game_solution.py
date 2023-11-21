@@ -64,7 +64,6 @@ class Sheep(Ball):
             self.check_fence_collision()
         self.idle()
 
-
     def get_coords(self):
         sheep_coords = []
         sheep_coords.append(canvas.coords(self.id)[0])
@@ -88,6 +87,10 @@ class Sheep(Ball):
             if(sheep_coords[1] > gate_y1 and sheep_coords[3] < gate_y2):
                 self.remove()
                 sheep_list.remove(self)
+                add_to_score()
+                # canvas.delete(score_text)
+                update_ui(False, False, True)
+                check_level_completed()
                 return True
 
     def check_fence_collision(self):
@@ -176,12 +179,58 @@ def spawn_sheep():
         y = randint(int(fence_y1 + 30), int(fence_y2 - 30))
         sheep.place(x, y)
 
+def update_ui(update_level_text = True, update_time_remaining_text = True, update_score_text = True):
+    global level_text, time_remaining_text, score_text
+
+    # If text does not exist, create it
+    try:
+        level_text
+    except NameError:
+        level_text = canvas.create_text(50, 0, text = f"Level: {level}", font = ("Calibri", 30), fill = "white", anchor = "nw")
+
+    try:
+        time_remaining_text
+    except NameError:
+        time_remaining_text = canvas.create_text(canvas_width / 2, 0, text = f"{time_remaining}", font = ("Calibri", 60), fill = "white", anchor = "n")
+
+    try:
+        score_text
+    except NameError:
+        score_text = canvas.create_text(canvas_width - 50, 0, text = f"Score: {score}", font = ("Calibri", 30), fill = "white", anchor = "ne")
+
+    if(update_level_text):
+        canvas.delete(level_text)
+        level_text = canvas.create_text(50, 0, text = f"Level: {level}", font = ("Calibri", 30), fill = "white", anchor = "nw")
+
+    if(update_time_remaining_text):
+        canvas.delete(time_remaining_text)
+        time_remaining_text = canvas.create_text(canvas_width / 2, 0, text = f"{time_remaining}", font = ("Calibri", 60), fill = "white", anchor = "n")
+
+    if(update_score_text):
+        canvas.delete(score_text)
+        score_text = canvas.create_text(canvas_width - 50, 0, text = f"Score: {score}", font = ("Calibri", 30), fill = "white", anchor = "ne")
+
+def check_level_completed():
+    
+    pass
+
+def update_timer():
+    global time_remaining
+    if(time_remaining > 0):
+        time_remaining -= 1
+        # canvas.delete(time_remaining_text)
+        update_ui(False, True, False)
+    window.after(1000, update_timer)
+
+def add_to_score():
+    global score
+    score += 10
+    
 
 def on_mouse_motion(event):
     x = player.get_centre()[0]
     y = player.get_centre()[1]
     player.move(event.x - x, event.y - y)
-
 
 def update_game():
     player.repel(100)
@@ -199,14 +248,18 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-level = 30
+level = 5
+time_remaining = 30
+score = 0
 
 player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
 
+update_ui()
 create_fence()
 create_gate()
 spawn_sheep()
+update_timer()
 update_game()
 
 window.bind('<Motion>', on_mouse_motion)
