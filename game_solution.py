@@ -84,6 +84,8 @@ class Sheep(Ball):
         self.speed_y *= 0.995
 
     def check_gate_collision(self):
+        global time_remaining
+
         sheep_coords = self.get_coords()
 
         gate_y1 = canvas.coords(gate)[1]
@@ -96,10 +98,10 @@ class Sheep(Ball):
                 sheep_list.remove(self)
                 if(self.is_super):
                     add_to_score(self.value)
+                    time_remaining += 2
                 else:
                     add_to_score(self.value)
-                # canvas.delete(score_text)
-                update_ui(False, False, True)
+                update_ui(False, True, True)
                 check_level_completed()
                 return True
 
