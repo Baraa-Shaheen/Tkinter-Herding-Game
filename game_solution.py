@@ -156,6 +156,7 @@ class Sheep(Ball):
 
 
 def create_fence():
+    global fence
     fence_dimensions = [400,225]
     if (fence_dimensions[0] < 1920):
         fence_dimensions[0] = fence_dimensions[0] + (level * 10)
@@ -168,17 +169,32 @@ def create_fence():
     fence_x2 = (canvas_width / 2) + (fence_dimensions[0] / 2)
     fence_y2 = (canvas_height / 2) + (fence_dimensions[1] / 2)
 
-    canvas.create_rectangle(fence_x1, fence_y1, fence_x2, fence_y2, fill="", outline="black", width=4)
+    # If there is no fence on the canvas, create and add one
+    try:
+        fence
+    except NameError:
+        fence = canvas.create_rectangle(fence_x1, fence_y1, fence_x2, fence_y2, fill="", outline="black", width=4)
+    else:
+        canvas.delete(fence)
+        fence = canvas.create_rectangle(fence_x1, fence_y1, fence_x2, fence_y2, fill="", outline="black", width=4)
+
+    
 
     
 def create_gate():
+    global gate
     x1 = fence_x2 - 2
     y1 = (canvas_height / 2) - 75
     x2 = fence_x2 + 10
     y2 = (canvas_height / 2) + 75
 
-    global gate
-    gate = canvas.create_rectangle(x1, y1, x2, y2, fill="green", outline = "green", width = 0)
+    try:
+        gate
+    except NameError:
+        gate = canvas.create_rectangle(x1, y1, x2, y2, fill="green", outline = "green", width = 0)
+    else:
+        canvas.delete(gate)
+        gate = canvas.create_rectangle(x1, y1, x2, y2, fill="green", outline = "green", width = 0)
 
 
 def spawn_sheep():
