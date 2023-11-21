@@ -247,11 +247,6 @@ def update_ui(update_level_text = True, update_time_remaining_text = True, updat
             score_text = canvas.create_text(canvas_width - 50, 0, text = f"Score: {score}", font = ("Calibri", 30), fill = "white", anchor = "ne")
     
 
-   
-
-    
-
-
 def check_level_completed():
     global level_completed, level
     if len(sheep_list) == 0:
@@ -301,12 +296,15 @@ def start_new_level():
 
 def pause_game():
     global game_paused
-    game_paused = True
-    update_game()
+    if(game_paused):
+        unpause_game()
+    else:
+        game_paused = True
 
 def unpause_game():
     global game_paused
     game_paused = False
+    update_timer()
     update_game()
 
 # Create 1920x1080 window with green canvas
