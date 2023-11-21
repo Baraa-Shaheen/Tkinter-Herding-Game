@@ -334,16 +334,41 @@ def toggle_pause_menu():
         main_menu_button.destroy()
 
 def show_main_menu():
-     window.unbind("<Escape>")
-     start_game_button = tk.Button(canvas, text = "Start Game", font = ("Calibri", 40), width = 15, command = start_new_level)
+     global main_menu_button_list
+     main_menu_button_list = []
+
+     start_game_button = tk.Button(canvas, text = "Start Game", font = ("Calibri", 40), width = 15, command = start_game)
+     main_menu_button_list.append(start_game_button)
+
      load_game_button = tk.Button(canvas, text = "Load Game", font = ("Calibri", 40), width = 15, command = load_game)
+     main_menu_button_list.append(load_game_button)
+
      leaderboard_button = tk.Button(canvas, text = "Leaderboard", font = ("Calibri", 40), width = 15, command = show_leaderboard)
+     main_menu_button_list.append(leaderboard_button)
+
      controls_button = tk.Button(canvas, text = "Options", font = ("Calibri", 40), width = 15, command = show_controls_menu)
+     main_menu_button_list.append(controls_button)
+
      exit_game_button = tk.Button(canvas, text = "Main Menu", font = ("Calibri", 40), width = 15, command = exit_game)
+     main_menu_button_list.append(exit_game_button)
+
+     start_game_button.place(x = (canvas_width / 2 - 208), y = 275)
+     load_game_button.place(x = (canvas_width / 2) - 208, y = 400)
+     leaderboard_button.place(x = (canvas_width / 2) - 208, y = 525)
+     controls_button.place(x = (canvas_width / 2) - 208, y = 650)
+     exit_game_button.place(x = (canvas_width / 2) - 208, y = 775)
+
+
+def hide_main_menu():
+    for button in main_menu_button_list:
+        button.destroy()
+
+
 
 
 def end_game():
     game_over_text = canvas.create_text(canvas_width / 2, 75, text = f"Game Over!", font = ("Calibri", 50), fill = "white", anchor = "n")
+    #...
 
 
 
@@ -369,7 +394,6 @@ def show_leaderboard():
     pass
 
 
-
 def show_controls_menu():
 
     pass
@@ -378,6 +402,13 @@ def show_controls_menu():
 def exit_game():
 
     pass
+
+def start_game():
+    hide_main_menu()
+    start_new_level()
+    update_timer()
+    update_game()
+
 
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
@@ -398,10 +429,9 @@ game_paused = False
 player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
 
+show_main_menu()
+# start_game()
 
-start_new_level()
-update_timer()
-update_game()
 window.bind('<Motion>', on_mouse_motion)
 window.bind("<Escape>", lambda event: toggle_pause_game())
 
