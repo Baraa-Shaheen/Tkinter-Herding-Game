@@ -264,6 +264,7 @@ def update_timer():
         update_ui(False, True, False)
     if(time_remaining == 0):
         game_over = True
+        end_game()
     
     if(not game_paused):
         window.after(1000, update_timer)
@@ -313,7 +314,7 @@ def unpause_game():
     toggle_pause_menu()
     update_timer()
     update_game()
-    
+
 
 def toggle_pause_menu():
     global resume_button, save_game_button, main_menu_button
@@ -323,18 +324,33 @@ def toggle_pause_menu():
         save_game_button = tk.Button(canvas, text = "Save Game", font = ("Calibri", 40), width = 15, command = save_game)
         main_menu_button = tk.Button(canvas, text = "Main Menu", font = ("Calibri", 40), width = 15, command = return_to_main_menu)
 
-        resume_button.place(x = (canvas_width / 2 - 208), y = 250)
-        save_game_button.place(x = (canvas_width / 2) - 208, y = 400)
-        main_menu_button.place(x = (canvas_width / 2) - 208, y = 550)
+        resume_button.place(x = (canvas_width / 2 - 208), y = 325)
+        save_game_button.place(x = (canvas_width / 2) - 208, y = 450)
+        main_menu_button.place(x = (canvas_width / 2) - 208, y = 575)
 
     else:
         resume_button.destroy()
         save_game_button.destroy()
         main_menu_button.destroy()
 
+def show_main_menu():
+     window.unbind("<Escape>")
+     start_game_button = tk.Button(canvas, text = "Start Game", font = ("Calibri", 40), width = 15, command = start_new_level)
+     load_game_button = tk.Button(canvas, text = "Load Game", font = ("Calibri", 40), width = 15, command = load_game)
+     leaderboard_button = tk.Button(canvas, text = "Leaderboard", font = ("Calibri", 40), width = 15, command = show_leaderboard)
+     controls_button = tk.Button(canvas, text = "Options", font = ("Calibri", 40), width = 15, command = show_controls_menu)
+     exit_game_button = tk.Button(canvas, text = "Main Menu", font = ("Calibri", 40), width = 15, command = exit_game)
+
+
+def end_game():
+    game_over_text = canvas.create_text(canvas_width / 2, 75, text = f"Game Over!", font = ("Calibri", 50), fill = "white", anchor = "n")
+
+
 
 def return_to_main_menu():
-
+    toggle_pause_game()
+    global game_over
+    game_over = True
     pass
 
 
@@ -343,6 +359,25 @@ def save_game():
     pass
 
 
+def load_game():
+
+    pass
+
+
+def show_leaderboard():
+
+    pass
+
+
+
+def show_controls_menu():
+
+    pass
+
+
+def exit_game():
+
+    pass
 
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
@@ -363,10 +398,10 @@ game_paused = False
 player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
 
+
 start_new_level()
 update_timer()
 update_game()
-
 window.bind('<Motion>', on_mouse_motion)
 window.bind("<Escape>", lambda event: toggle_pause_game())
 
