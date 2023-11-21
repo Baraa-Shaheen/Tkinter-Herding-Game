@@ -232,16 +232,21 @@ def update_ui(update_level_text = True, update_time_remaining_text = True, updat
 
 
 def check_level_completed():
-    
-    pass
+    global level_completed, level
+    if len(sheep_list) == 0:
+        add_to_score(time_remaining * 5)
+        level += 1
+        start_new_level()
 
 
 def update_timer():
-    global time_remaining
+    global time_remaining, game_over
+    
     if(time_remaining > 0):
         time_remaining -= 1
-        # canvas.delete(time_remaining_text)
         update_ui(False, True, False)
+    if(time_remaining == 0):
+        game_over = True
     window.after(1000, update_timer)
 
 
@@ -272,19 +277,27 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-level = 35
+level = 1
 time_remaining = 30
 score = 0
+game_over = False
 
 player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
 
-update_ui()
-create_fence()
-create_gate()
-spawn_sheep()
+def start_new_level():
+    global time_remaining
+    time_remaining = 30
+    update_ui()
+    create_fence()
+    create_gate()
+    spawn_sheep()
+
+
+start_new_level()
 update_timer()
 update_game()
+
 
 window.bind('<Motion>', on_mouse_motion)
 
