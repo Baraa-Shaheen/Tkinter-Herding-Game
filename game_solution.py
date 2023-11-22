@@ -253,6 +253,13 @@ def remove_ui():
     canvas.delete(time_remaining_text)
     canvas.delete(score_text)
 
+    # try:
+    #     game_over_text
+    # except NameError:
+    #     pass
+    # else:
+    #     canvas.delete(game_over_text)
+
 
 def check_level_completed():
     global level_completed, level
@@ -298,7 +305,7 @@ def update_game():
 
 def start_new_level():
     global time_remaining
-    time_remaining = 15
+    time_remaining = 3
     update_ui()
     create_fence()
     create_gate()
@@ -346,6 +353,7 @@ def show_main_menu():
      global main_menu_button_list
      main_menu_button_list = []
 
+
      start_game_button = tk.Button(canvas, text = "Start Game", font = ("Calibri", 40), width = 15, command = start_game)
      main_menu_button_list.append(start_game_button)
 
@@ -376,17 +384,27 @@ def hide_main_menu():
 
 
 def end_game():
-    global game_running
+    global game_running, game_paused, game_over_text
     game_running = False
-
-    game_over_text = canvas.create_text(canvas_width / 2, 75, text = f"Game Over!", font = ("Calibri", 50), fill = "white", anchor = "n")
+    game_paused = True
+    game_over_text = canvas.create_text(canvas_width / 2, 100, text = f"Game Over!", font = ("Calibri", 50), fill = "white", anchor = "n")
     show_game_over_menu()
     #...
 
 
 def show_game_over_menu():
-    
-    pass
+    global play_again_button, main_menu_button2
+
+    play_again_button = tk.Button(canvas, text = "Play Again", font = ("Calibri", 40), width = 15, command=lambda: start_game(True))
+    main_menu_button2 = tk.Button(canvas, text = "Main Menu", font = ("Calibri", 40), width = 15, command=lambda: return_to_main_menu(True))
+
+    play_again_button.place(x = (canvas_width / 2 - 208), y = 200)
+    main_menu_button2.place(x = (canvas_width / 2 - 208), y = 325)
+
+
+def hide_game_over_menu():
+    play_again_button.destroy()
+    main_menu_button2.destroy()
 
 
 def remove_all_elements():
@@ -399,8 +417,9 @@ def remove_all_elements():
     
 
 
-def return_to_main_menu():
-    # toggle_pause_game()
+def return_to_main_menu(play_again = False):
+    if(play_again):
+        hide_game_over_menu()
     global game_over, game_running, game_paused
     game_over = True
     game_running = False
@@ -433,12 +452,16 @@ def show_controls_menu():
 def exit_game():
     window.destroy()
 
-def start_game():
-    global game_running, level, score
+def start_game(play_again = False):
+    global game_running, game_paused, level, score
     game_running = True
+    game_paused = False
     level = 1
     score = 0
-    hide_main_menu()
+    if(play_again):
+        hide_game_over_menu()
+    else:
+        hide_main_menu()
     start_new_level()
     update_timer()
     update_game()
@@ -455,7 +478,7 @@ canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
 level = 1
-time_remaining = 15
+time_remaining = 3
 score = 0
 game_over = False
 game_paused = False
