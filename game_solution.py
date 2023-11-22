@@ -159,9 +159,9 @@ class Sheep(Ball):
 def create_fence():
     global fence
     fence_dimensions = [400,225]
-    if (fence_dimensions[0] < 1920):
+    if (fence_dimensions[0] < 1900):
         fence_dimensions[0] = fence_dimensions[0] + (level * 10)
-    if (fence_dimensions[1] < 1080):
+    if (fence_dimensions[1] < 1060):
         fence_dimensions[1] = fence_dimensions[1] + (level * 6)
 
     global fence_x1, fence_y1, fence_x2, fence_y2
@@ -305,7 +305,7 @@ def update_game():
 
 def start_new_level():
     global time_remaining
-    time_remaining = 3
+    time_remaining = 15
     update_ui()
     create_fence()
     create_gate()
@@ -387,23 +387,22 @@ def end_game():
     global game_running, game_paused, game_over_text
     game_running = False
     game_paused = True
-    game_over_text = canvas.create_text(canvas_width / 2, 100, text = f"Game Over!", font = ("Calibri", 50), fill = "white", anchor = "n")
     show_game_over_menu()
     #...
 
 
 def show_game_over_menu():
-    global play_again_button, main_menu_button2
+    global try_again_button, main_menu_button2
 
-    play_again_button = tk.Button(canvas, text = "Play Again", font = ("Calibri", 40), width = 15, command=lambda: start_game(True))
+    try_again_button = tk.Button(canvas, text = "Try Again", font = ("Calibri", 40), width = 15, command=lambda: start_game(True))
     main_menu_button2 = tk.Button(canvas, text = "Main Menu", font = ("Calibri", 40), width = 15, command=lambda: return_to_main_menu(True))
 
-    play_again_button.place(x = (canvas_width / 2 - 208), y = 200)
+    try_again_button.place(x = (canvas_width / 2 - 208), y = 200)
     main_menu_button2.place(x = (canvas_width / 2 - 208), y = 325)
 
 
 def hide_game_over_menu():
-    play_again_button.destroy()
+    try_again_button.destroy()
     main_menu_button2.destroy()
 
 
@@ -459,6 +458,7 @@ def start_game(play_again = False):
     level = 1
     score = 0
     if(play_again):
+        remove_all_elements()
         hide_game_over_menu()
     else:
         hide_main_menu()
@@ -477,9 +477,9 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-level = 1
-time_remaining = 3
-score = 0
+# level = 1
+# time_remaining = 15
+# score = 0
 game_over = False
 game_paused = False
 game_running = False
