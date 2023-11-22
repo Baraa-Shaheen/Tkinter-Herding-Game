@@ -388,8 +388,29 @@ def end_game():
     game_running = False
     game_paused = True
     show_game_over_menu()
+    show_name_form()
     #...
 
+
+def show_name_form():
+    global entry, name_form_window
+    name_form_window = tk.Toplevel(window)
+    name_form_window.title("Enter your name: ")
+    name_form_window.geometry(f"300x80+{(canvas_width // 2) - 150}+300")
+    name_form_window.grab_set()
+    
+    entry = tk.Entry(name_form_window, width = 40)
+    entry.pack(pady=10)
+    submit_button = tk.Button(name_form_window, text="Submit", command=save_to_leaderboard)
+    submit_button.pack()
+
+def save_to_leaderboard():
+    name = entry.get()
+    name_form_window.grab_release()
+    name_form_window.destroy()
+    print(name)
+    print(score)
+    print(level)
 
 def show_game_over_menu():
     global try_again_button, main_menu_button2
