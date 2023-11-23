@@ -490,6 +490,7 @@ def remove_all_elements():
     remove_ui()
     for sheep in sheep_list:
         sheep.remove()
+    player.remove()
     canvas.delete(fence)
     canvas.delete(gate)
     
@@ -517,14 +518,77 @@ def load_game():
     pass
 
 
+def on_key_press(event):
+    key = event.keysym
+
+    if(key == "Up" or key == "w"):
+        player.move(0,-20)
+    
+    elif(key == "Down" or key =="s"):
+        player.move(0,20)
+
+    elif(key == "Left" or key =="a"):
+        player.move(-20,0)
+
+    elif(key == "Right" or key =="d"):
+        player.move(20,0)
+    
+
+def bind_controls():
+    if(controls == "cursor"):
+        window.bind("<Motion>", on_mouse_motion)
+
+    elif(controls == "arrow"):
+        window.bind("<KeyPress-Left>", on_key_press)
+        window.bind("<KeyPress-Right>", on_key_press)
+        window.bind("<KeyPress-Up>", on_key_press)
+        window.bind("<KeyPress-Down>", on_key_press)
+
+    else:
+        window.bind("<KeyPress-w>", on_key_press)
+        window.bind("<KeyPress-a>", on_key_press)
+        window.bind("<KeyPress-s>", on_key_press)
+        window.bind("<KeyPress-d>", on_key_press)
+
+
+def unbind_other_controls():
+    if(controls == "cursor"):
+        window.unbind("<KeyPress-Left>")
+        window.unbind("<KeyPress-Right>")
+        window.unbind("<KeyPress-Up>")
+        window.unbind("<KeyPress-Down>")
+
+        window.unbind("<KeyPress-w>")
+        window.unbind("<KeyPress-a>")
+        window.unbind("<KeyPress-s>")
+        window.unbind("<KeyPress-d>")
+
+    elif(controls == "arrow"):
+        window.unbind("<Motion>")
+
+        window.unbind("<KeyPress-w>")
+        window.unbind("<KeyPress-a>")
+        window.unbind("<KeyPress-s>")
+        window.unbind("<KeyPress-d>")
+
+    else:
+        window.unbind("<Motion>")
+
+        window.unbind("<KeyPress-Left>")
+        window.unbind("<KeyPress-Right>")
+        window.unbind("<KeyPress-Up>")
+        window.unbind("<KeyPress-Down>")
+
+
 def exit_game():
     window.destroy()
 
 def start_game(play_again = False):
-    global game_running, game_paused, game_over, level, score, controls
+    global game_running, game_paused, game_over, level, score, controls, player
     game_running = True
     game_paused = False
     game_over = False
+    player = Player()
 
     try:
         controls_rb_value
@@ -533,12 +597,14 @@ def start_game(play_again = False):
     else:
         controls = controls_rb_value
 
-    if(controls == "cursor"):
-        window.bind('<Motion>', on_mouse_motion)
-    elif(controls == "arrow"):
-        window.unbind('<Motion>')
-    else:
-        window.unbind('<Motion>')
+    bind_controls()
+    unbind_other_controls()
+
+    # Show player ball if not using cursor control
+    if(controls == "arrow" or controls == "wasd"):
+        player.hidden_state = "normal"
+
+    player.place(canvas_width / 2, canvas_height / 2)
 
     level = 1
     score = 0
@@ -562,19 +628,8 @@ canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
-# level = 1
-# time_remaining = 15
-# score = 0
-# game_over = False
-# game_paused = False
-# game_running = False
-
-player = Player()
-player.place(canvas_width / 2, canvas_height / 2)
-
 show_main_menu()
 
 window.bind("<Escape>", lambda event: toggle_pause_game())
-
 
 window.mainloop()
