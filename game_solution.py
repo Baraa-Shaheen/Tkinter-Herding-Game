@@ -360,7 +360,7 @@ def show_main_menu():
      load_game_button = tk.Button(canvas, text = "Load Game", font = ("Calibri", 40), width = 15, command = load_game)
      main_menu_button_list.append(load_game_button)
 
-     leaderboard_button = tk.Button(canvas, text = "Leaderboard", font = ("Calibri", 40), width = 15, command = show_leaderboard)
+     leaderboard_button = tk.Button(canvas, text = "Leaderboard", font = ("Calibri", 40), width = 15, command = display_leaderboard)
      main_menu_button_list.append(leaderboard_button)
 
      controls_button = tk.Button(canvas, text = "Controls", font = ("Calibri", 40), width = 15, command = show_controls_menu)
@@ -408,9 +408,37 @@ def save_to_leaderboard():
     name = entry.get()
     name_form_window.grab_release()
     name_form_window.destroy()
-    print(name)
-    print(score)
-    print(level)
+    with open('leaderboard.txt', 'a') as file:
+        file.write(f"{name} {level} {score}\n")
+
+def display_leaderboard():
+    scores = []
+    with open('leaderboard.txt', 'r') as file:
+        for line in file:
+            name, level, score = line.split()
+            scores.append((name, int(level), int(score)))
+    
+    # Sort scores in descending order based on score
+    scores.sort(key=lambda x: x[2], reverse=True)
+
+    leaderboard_text = "    Player                            Level           Score\n\n"
+    for i in range(len(scores)):
+        name, level, score = scores[i]
+        leaderboard_text += f"{(i + 1):4}. {name:30} {level:4} {score:15}\n"
+
+    leaderboard_window= tk.Toplevel(window)
+    leaderboard_window.title("Leaderboard")
+    leaderboard_window.geometry(f"500x242+{(canvas_width // 2) - 250}+300")
+    leaderboard_window.grab_set()
+
+    leaderboard_text_widget = tk.Text(leaderboard_window) #height=10, width=30)
+    leaderboard_text_widget.pack()
+
+    # Insert the leaderboard_text into the Text widget
+    leaderboard_text_widget.insert(tk.END, leaderboard_text)
+
+    
+
 
 def show_game_over_menu():
     global try_again_button, main_menu_button2
