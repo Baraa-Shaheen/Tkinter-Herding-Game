@@ -430,16 +430,40 @@ def show_leaderboard():
 
     leaderboard_window= tk.Toplevel(window)
     leaderboard_window.title("Leaderboard")
-    leaderboard_window.geometry(f"500x275+{(canvas_width // 2) - 250}+300")
+    leaderboard_window.geometry(f"500x280+{(canvas_width // 2) - 250}+{(canvas_height // 2) - 140}")
     leaderboard_window.grab_set()
 
-    leaderboard_text_widget = tk.Text(leaderboard_window) #height=10, width=30)
+    leaderboard_text_widget = tk.Text(leaderboard_window)
     leaderboard_text_widget.pack()
 
     # Insert the leaderboard_text into the Text widget
     leaderboard_text_widget.insert(tk.END, leaderboard_text)
 
     
+def show_controls_menu():
+    controls_menu = tk.Toplevel(window)
+    controls_menu.title("Change controls")
+    controls_menu.geometry(f"500x280+{(canvas_width // 2) - 250}+{(canvas_height // 2) - 140}")
+    controls_menu.grab_set()
+
+    global radio_value
+    radio_value = tk.StringVar()
+    radio_value.set("cursor")
+
+    radio_button1 = tk.Radiobutton(controls_menu, text="Cursor", variable=radio_value, value="cursor", font = ("Calibri", 20), command = set_controls)
+    radio_button1.pack()
+
+    radio_button2 = tk.Radiobutton(controls_menu, text="Arrow Keys", variable=radio_value, value="arrow", font = ("Calibri", 20), command = set_controls)
+    radio_button2.pack()
+
+    radio_button3 = tk.Radiobutton(controls_menu, text="W A S D Keys", variable=radio_value, value="wasd", font = ("Calibri", 20), command = set_controls)
+    radio_button3.pack()
+
+def set_controls():
+    global controls
+    controls = radio_value.get()
+    print(controls)
+
 
 
 def show_game_over_menu():
@@ -485,11 +509,6 @@ def save_game():
 
 
 def load_game():
-
-    pass
-
-
-def show_controls_menu():
 
     pass
 
@@ -541,5 +560,3 @@ window.bind("<Escape>", lambda event: toggle_pause_game())
 
 
 window.mainloop()
-
-# TODO: Fix main menu button not working from game over menu
