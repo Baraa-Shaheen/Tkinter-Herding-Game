@@ -325,14 +325,16 @@ def toggle_pause_game():
  
 def unpause_game():
     global game_paused
-    # update_timer()
     game_paused = False
     toggle_pause_menu()
     update_game()
 
 
-def toggle_pause_menu():
+def toggle_pause_menu(from_game_over_menu = False):
     global resume_button, save_game_button, main_menu_button
+
+    if(from_game_over_menu):
+        return
 
     if(game_paused):
         resume_button = tk.Button(canvas, text = "Resume", font = ("Calibri", 40), width = 15, command = toggle_pause_game)
@@ -472,7 +474,7 @@ def return_to_main_menu(play_again = False):
     game_over = True
     game_running = False
     game_paused = False
-    toggle_pause_menu()
+    toggle_pause_menu(play_again)
     remove_all_elements()
     show_main_menu()
 
@@ -541,4 +543,3 @@ window.bind("<Escape>", lambda event: toggle_pause_game())
 window.mainloop()
 
 # TODO: Fix main menu button not working from game over menu
-# TODO: Fix pause causing timer to go down faster
