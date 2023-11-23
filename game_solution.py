@@ -1,7 +1,7 @@
 #1920x1080
 
 import tkinter as tk
-from random import randint, uniform
+from random import randint
 from math import sqrt
 
 class Ball:
@@ -58,7 +58,7 @@ class Player(Ball):
 class Sheep(Ball):
     def __init__(self, radius = 20, colour = "white", value = 10, is_super = False):
         if(is_super):
-            radius = radius * 1.3
+            radius = radius * 1.5
             value = value * 2
         super().__init__(radius, colour)
         self.is_super = is_super
@@ -145,13 +145,13 @@ class Sheep(Ball):
                 multiplier = -1
             else:
                 multiplier = 1
-            self.velocity_x = 0.4 * multiplier
+            self.velocity_x = 0.55 * multiplier
 
             if(direction_y == 0):
                 multiplier = -1
             else:
                 multiplier = 1
-            self.velocity_y = 0.4 * multiplier
+            self.velocity_y = 0.55 * multiplier
 
 
 
@@ -272,7 +272,7 @@ def check_level_completed():
 def update_timer():
     global time_remaining, game_over
     
-    if(game_running):
+    if(game_running and not game_paused):
         if(time_remaining > 0):
             time_remaining -= 1
             update_ui(False, True, False)
@@ -280,7 +280,8 @@ def update_timer():
             game_over = True
             end_game()
     
-    if(not game_paused):
+    # if(not game_paused):
+    if(not game_over):
         window.after(1000, update_timer)
 
 
@@ -315,19 +316,18 @@ def start_new_level():
 def toggle_pause_game():
     global game_paused
 
-    if(game_running):
-        if(not game_paused):
-            game_paused = True
-            toggle_pause_menu()
-        else:
-            unpause_game()
+    if(game_running and not game_paused):
+        game_paused = True
+        toggle_pause_menu()
+    else:
+        unpause_game()
 
  
 def unpause_game():
     global game_paused
+    # update_timer()
     game_paused = False
     toggle_pause_menu()
-    update_timer()
     update_game()
 
 
@@ -339,7 +339,7 @@ def toggle_pause_menu():
         save_game_button = tk.Button(canvas, text = "Save Game", font = ("Calibri", 40), width = 15, command = save_game)
         main_menu_button = tk.Button(canvas, text = "Main Menu", font = ("Calibri", 40), width = 15, command = return_to_main_menu)
 
-        resume_button.place(x = (canvas_width / 2 - 208), y = 325)
+        resume_button.place(x = (canvas_width / 2) - 208, y = 325)
         save_game_button.place(x = (canvas_width / 2) - 208, y = 450)
         main_menu_button.place(x = (canvas_width / 2) - 208, y = 575)
 
@@ -360,7 +360,7 @@ def show_main_menu():
      load_game_button = tk.Button(canvas, text = "Load Game", font = ("Calibri", 40), width = 15, command = load_game)
      main_menu_button_list.append(load_game_button)
 
-     leaderboard_button = tk.Button(canvas, text = "Leaderboard", font = ("Calibri", 40), width = 15, command = display_leaderboard)
+     leaderboard_button = tk.Button(canvas, text = "Leaderboard", font = ("Calibri", 40), width = 15, command = show_leaderboard)
      main_menu_button_list.append(leaderboard_button)
 
      controls_button = tk.Button(canvas, text = "Controls", font = ("Calibri", 40), width = 15, command = show_controls_menu)
@@ -411,7 +411,7 @@ def save_to_leaderboard():
     with open('leaderboard.txt', 'a') as file:
         file.write(f"{name} {level} {score}\n")
 
-def display_leaderboard():
+def show_leaderboard():
     scores = []
     with open('leaderboard.txt', 'r') as file:
         for line in file:
@@ -428,7 +428,7 @@ def display_leaderboard():
 
     leaderboard_window= tk.Toplevel(window)
     leaderboard_window.title("Leaderboard")
-    leaderboard_window.geometry(f"500x242+{(canvas_width // 2) - 250}+300")
+    leaderboard_window.geometry(f"500x275+{(canvas_width // 2) - 250}+300")
     leaderboard_window.grab_set()
 
     leaderboard_text_widget = tk.Text(leaderboard_window) #height=10, width=30)
@@ -487,11 +487,6 @@ def load_game():
     pass
 
 
-def show_leaderboard():
-
-    pass
-
-
 def show_controls_menu():
 
     pass
@@ -501,9 +496,10 @@ def exit_game():
     window.destroy()
 
 def start_game(play_again = False):
-    global game_running, game_paused, level, score
+    global game_running, game_paused, game_over, level, score
     game_running = True
     game_paused = False
+    game_over = False
     level = 1
     score = 0
     if(play_again):
@@ -529,9 +525,9 @@ canvas.pack()
 # level = 1
 # time_remaining = 15
 # score = 0
-game_over = False
-game_paused = False
-game_running = False
+# game_over = False
+# game_paused = False
+# game_running = False
 
 player = Player()
 player.place(canvas_width / 2, canvas_height / 2)
@@ -543,3 +539,6 @@ window.bind("<Escape>", lambda event: toggle_pause_game())
 
 
 window.mainloop()
+
+# TODO: Fix main menu button not working from game over menu
+# TODO: Fix pause causing timer to go down faster
