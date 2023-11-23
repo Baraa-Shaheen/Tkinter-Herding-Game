@@ -448,22 +448,26 @@ def show_controls_menu():
 
     global radio_value
     radio_value = tk.StringVar()
-    radio_value.set("cursor")
 
-    radio_button1 = tk.Radiobutton(controls_menu, text="Cursor", variable=radio_value, value="cursor", font = ("Calibri", 20), command = set_controls)
+    try:
+        controls_rb_value
+    except NameError:
+        radio_value.set("cursor")
+    else:
+        radio_value.set(controls_rb_value)
+
+    radio_button1 = tk.Radiobutton(controls_menu, text="Cursor", variable=radio_value, value="cursor", font = ("Calibri", 20), command = set_controls_rb_value)
     radio_button1.pack()
 
-    radio_button2 = tk.Radiobutton(controls_menu, text="Arrow Keys", variable=radio_value, value="arrow", font = ("Calibri", 20), command = set_controls)
+    radio_button2 = tk.Radiobutton(controls_menu, text="Arrow Keys", variable=radio_value, value="arrow", font = ("Calibri", 20), command = set_controls_rb_value)
     radio_button2.pack()
 
-    radio_button3 = tk.Radiobutton(controls_menu, text="W A S D Keys", variable=radio_value, value="wasd", font = ("Calibri", 20), command = set_controls)
+    radio_button3 = tk.Radiobutton(controls_menu, text="W A S D Keys", variable=radio_value, value="wasd", font = ("Calibri", 20), command = set_controls_rb_value)
     radio_button3.pack()
 
-def set_controls():
-    global controls
-    controls = radio_value.get()
-    print(controls)
-
+def set_controls_rb_value():
+    global controls_rb_value
+    controls_rb_value = radio_value.get()
 
 
 def show_game_over_menu():
@@ -517,10 +521,25 @@ def exit_game():
     window.destroy()
 
 def start_game(play_again = False):
-    global game_running, game_paused, game_over, level, score
+    global game_running, game_paused, game_over, level, score, controls
     game_running = True
     game_paused = False
     game_over = False
+
+    try:
+        controls_rb_value
+    except NameError:
+        controls = "cursor"
+    else:
+        controls = controls_rb_value
+
+    if(controls == "cursor"):
+        window.bind('<Motion>', on_mouse_motion)
+    elif(controls == "arrow"):
+        window.unbind('<Motion>')
+    else:
+        window.unbind('<Motion>')
+
     level = 1
     score = 0
     if(play_again):
@@ -555,7 +574,6 @@ player.place(canvas_width / 2, canvas_height / 2)
 
 show_main_menu()
 
-window.bind('<Motion>', on_mouse_motion)
 window.bind("<Escape>", lambda event: toggle_pause_game())
 
 
