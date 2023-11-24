@@ -53,8 +53,8 @@ class Player(Ball):
                 vector_j = sheep_pos[1] - player_pos[1]
                 vector_magnitude = sqrt(vector_i**2 + vector_j**2)
                 unit_vector = [vector_i / vector_magnitude, vector_j / vector_magnitude]
-                sheep.velocity_x = unit_vector[0] * 2.5
-                sheep.velocity_y = unit_vector[1] * 2.5
+                sheep.velocity_x = unit_vector[0] * 3
+                sheep.velocity_y = unit_vector[1] * 3
 
 
 class Sheep(Ball):
