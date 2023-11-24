@@ -370,9 +370,18 @@ def toggle_pause_menu(from_game_over_menu = False):
         
 
 def show_main_menu():
-     global main_menu_button_list
+     global main_menu_button_list, sheep_image_tk_id, title_text
      main_menu_button_list = []
 
+     title_text = canvas.create_text(canvas_width / 2, 25, text = "Super Sheep Frenzy", font = ("Calibri", 60), fill = "white", anchor = "n")
+     title_text_coords = canvas.coords(title_text)
+
+     # cartoon sheep designed By Techchennai from https://pngtree.com/freepng/cartoon-sheep_3584615.html?sol=downref&id=bef
+     sheep_image = Image.open("sheep.png")
+     sheep_image = sheep_image.resize((130,95))
+     sheep_image_tk = ImageTk.PhotoImage(sheep_image)
+     sheep_image_tk_id = canvas.create_image((canvas_width / 2) - 65, 135, anchor=tk.NW, image=sheep_image_tk)
+     canvas.image = sheep_image_tk
 
      start_game_button = tk.Button(canvas, text = "Start Game", font = ("Calibri", 40), width = 15, command = start_game)
      main_menu_button_list.append(start_game_button)
@@ -399,6 +408,9 @@ def show_main_menu():
 def hide_main_menu():
     for button in main_menu_button_list:
         button.destroy()
+    canvas.delete(title_text)
+    canvas.delete(sheep_image_tk_id)
+
 
 
 
@@ -752,7 +764,7 @@ def start_game(play_again = False, start_loaded_game = False):
 # Create 1920x1080 window with green canvas
 window = tk.Tk()
 window.geometry("1920x1080")
-window.title("Sheep Herding Game")
+window.title("Super Sheep Frenzy")
 # window.attributes("-fullscreen", True)
 canvas_width = 1920
 canvas_height = 1080
