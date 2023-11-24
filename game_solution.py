@@ -726,15 +726,6 @@ def start_game(play_again = False, start_loaded_game = False):
     else:
         controls = controls_rb_value
 
-    bind_controls()
-    unbind_other_controls()
-
-    # Show player ball if not using cursor control
-    if(controls == "arrow" or controls == "wasd"):
-        player.hidden_state = "normal"
-
-    player.place(canvas_width / 2, canvas_height / 2)
-
     if(not start_loaded_game):
         level = 1
         score = 0
@@ -744,7 +735,15 @@ def start_game(play_again = False, start_loaded_game = False):
         hide_game_over_menu()
     else:
         hide_main_menu()
+    
+    bind_controls()
+    unbind_other_controls()
 
+    # Show player ball if not using cursor control
+    if(controls == "arrow" or controls == "wasd"):
+        player.hidden_state = "normal"
+
+    player.place(canvas_width / 2, canvas_height / 2)
     start_new_level(start_loaded_game)
     update_timer()
     update_game()
