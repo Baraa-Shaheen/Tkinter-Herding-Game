@@ -526,7 +526,6 @@ def remove_all_elements():
     canvas.delete(gate)
     
 
-
 def return_to_main_menu(play_again = False):
     if(play_again):
         hide_game_over_menu()
@@ -576,7 +575,6 @@ def load_game():
             loaded_sheep_data_list.append(loaded_data_line)
     start_game(start_loaded_game = True)
             
-        
 
 
 def on_key_press(event):
