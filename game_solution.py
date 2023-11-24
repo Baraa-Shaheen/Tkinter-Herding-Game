@@ -80,6 +80,9 @@ class Sheep(Ball):
         sheep_coords.append(canvas.coords(self.id)[3])
         return sheep_coords
     
+    # def set_coords(self, coords):
+    #     canvas.coords(self.id, coords[0], coords[1], coords[2], coords[3])
+    
     def decelerate(self):
         self.velocity_x *= 0.99
         self.velocity_y *= 0.99
@@ -264,7 +267,7 @@ def remove_ui():
 def check_level_completed():
     global level_completed, level
     if len(sheep_list) == 0:
-        add_to_score(time_remaining * 5)
+        add_to_score(time_remaining * 20)
         level += 1
         start_new_level()
 
@@ -426,7 +429,7 @@ def show_leaderboard():
     leaderboard_text = "    Player                            Level           Score\n\n"
     for i in range(len(scores)):
         name, level, score = scores[i]
-        leaderboard_text += f"{(i + 1):4}. {name:30} {level:4} {score:15}\n"
+        leaderboard_text += f"{(i + 1):4}. {name:30} {level:4} {score:18}\n"
 
     leaderboard_window= tk.Toplevel(window)
     leaderboard_window.title("Leaderboard")
@@ -491,6 +494,7 @@ def remove_all_elements():
     for sheep in sheep_list:
         sheep.remove()
     player.remove()
+    window.unbind("<Motion>")
     canvas.delete(fence)
     canvas.delete(gate)
     
@@ -509,8 +513,30 @@ def return_to_main_menu(play_again = False):
 
 
 def save_game():
+    # sheep_coords_list = []
+    # for sheep in sheep_list:
+    #     sheep_coords_list.append(sheep.get_coords())
 
-    pass
+    
+
+    sheep_data_list = []
+    for sheep in sheep_list:
+        if(sheep.is_super):
+            sheep_data = sheep.get_coords()
+            sheep_data.append(1)
+        else:
+            sheep_data = sheep.get_coords()
+            sheep_data.append(0)
+        sheep_data_list.append(sheep_data)
+
+    with open('save.txt', 'a') as file:
+        file.write(f"{level} {time_remaining} {score}\n")
+        for sheep_data in sheep_data_list:
+            sheep_data_string = ""
+            for coord in sheep_data:
+                sheep_data_string+=str(coord) + " "
+            sheep_data_string = sheep_data_string[:-1]
+            file.write(f"{sheep_data_string}\n")
 
 
 def load_game():
