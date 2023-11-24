@@ -206,10 +206,12 @@ def create_fence():
         fence = canvas.create_rectangle(fence_x1, fence_y1, fence_x2, fence_y2, fill="", outline="black", width=4)
 
     
-def create_gate():
+def create_gate(create_loaded_gate = False):
     global gate, gate_position
 
-    gate_position = randint(1,4)
+    if(not create_loaded_gate):
+        gate_position = randint(1,4)
+
     if(gate_position == 1):
         x1 = fence_x2 - 2
         y1 = (canvas_height / 2) - 75
@@ -367,7 +369,7 @@ def start_new_level(start_loaded_level = False):
         time_remaining = 15
     update_ui()
     create_fence()
-    create_gate()
+    create_gate(start_loaded_level)
     spawn_sheep(start_loaded_level)
 
 
@@ -590,7 +592,7 @@ def save_game():
         sheep_data_list.append(sheep_data)
 
     with open('save.txt', 'w') as file:
-        file.write(f"{level} {time_remaining} {score}\n")
+        file.write(f"{level} {time_remaining} {score} {gate_position}\n")
         for sheep_data in sheep_data_list:
             sheep_data_string = ""
             for coord in sheep_data:
@@ -601,7 +603,7 @@ def save_game():
 
 
 def load_game():
-    global level, time_remaining, score, loaded_sheep_data_list
+    global level, time_remaining, score, gate_position, loaded_sheep_data_list
     loaded_sheep_data_list = []
     with open("save.txt", 'r') as file:
     # Read the first line to get level, score, and time_remaining values
@@ -609,6 +611,7 @@ def load_game():
         level = int(first_line[0])
         time_remaining = int(first_line[1])
         score = int(first_line[2])
+        gate_position = int(first_line[3])
     
         for line in file:
             loaded_data_line = [float(value) for value in line.split()]
