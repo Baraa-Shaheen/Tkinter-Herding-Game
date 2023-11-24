@@ -82,9 +82,6 @@ class Sheep(Ball):
         sheep_coords.append(canvas.coords(self.id)[3])
         return sheep_coords
     
-    # def set_coords(self, coords):
-    #     canvas.coords(self.id, coords[0], coords[1], coords[2], coords[3])
-    
     def decelerate(self):
         self.velocity_x *= 0.99
         self.velocity_y *= 0.99
@@ -180,8 +177,6 @@ class Sheep(Ball):
             self.velocity_y = 0.55 * multiplier
 
 
-
-
 def create_fence():
     global fence
     fence_dimensions = [400,225]
@@ -275,6 +270,7 @@ def spawn_sheep(spawn_loaded_sheep = False):
                 sheep_list.append(sheep) 
                 sheep.place(sheep_data[0], sheep_data[1])
 
+
 def update_ui(update_level_text = True, update_time_remaining_text = True, update_score_text = True):
     global level_text, time_remaining_text, score_text
 
@@ -312,12 +308,6 @@ def remove_ui():
     canvas.delete(time_remaining_text)
     canvas.delete(score_text)
 
-    # try:
-    #     game_over_text
-    # except NameError:
-    #     pass
-    # else:
-    #     canvas.delete(game_over_text)
 
 
 def check_level_completed():
@@ -452,8 +442,6 @@ def hide_main_menu():
         button.destroy()
     canvas.delete(title_text)
     canvas.delete(sheep_image_tk_id)
-
-
 
 
 
@@ -806,7 +794,7 @@ def start_game(play_again = False, start_loaded_game = False):
 window = tk.Tk()
 window.geometry("1920x1080")
 window.title("Super Sheep Frenzy")
-# window.attributes("-fullscreen", True)
+window.attributes("-fullscreen", True)
 canvas_width = 1920
 canvas_height = 1080
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
