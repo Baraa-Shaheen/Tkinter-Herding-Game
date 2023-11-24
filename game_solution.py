@@ -490,7 +490,7 @@ def set_controls_rb_value():
 def show_game_over_menu():
     global try_again_button, main_menu_button2
 
-    try_again_button = tk.Button(canvas, text = "Try Again", font = ("Calibri", 40), width = 15, command=lambda: start_game(True))
+    try_again_button = tk.Button(canvas, text = "Try Again", font = ("Calibri", 40), width = 15, command=lambda: start_game(play_again = True))
     main_menu_button2 = tk.Button(canvas, text = "Main Menu", font = ("Calibri", 40), width = 15, command=lambda: return_to_main_menu(True))
 
     try_again_button.place(x = (canvas_width / 2 - 208), y = 200)
@@ -567,6 +567,8 @@ def load_game():
 
 
 def on_key_press(event):
+    global score_cheat_code_index, time_cheat_code_index, super_sheep_cheat_code_index
+
     key = event.keysym
 
     if(key == "Up" or key == "w"):
@@ -580,7 +582,53 @@ def on_key_press(event):
 
     elif(key == "Right" or key =="d"):
         player.move(20,0)
-    
+
+    if(game_running and not game_paused):
+        if(key == score_cheat_code[score_cheat_code_index]):
+            score_cheat_code_index += 1
+        else:
+            score_cheat_code_index = 0
+
+        if(key == time_cheat_code[time_cheat_code_index]):
+            time_cheat_code_index += 1    
+        else:
+            time_cheat_code_index = 0
+
+        if(key == super_sheep_cheat_code[super_sheep_cheat_code_index]):
+            super_sheep_cheat_code_index += 1    
+        else:
+            super_sheep_cheat_code_index = 0
+
+    if(score_cheat_code_index == len(score_cheat_code)):
+        activate_cheat("score")
+        score_cheat_code_index = 0
+    if(time_cheat_code_index == len(time_cheat_code)):
+        activate_cheat("time")
+        time_cheat_code_index = 0
+    if(super_sheep_cheat_code_index == len(super_sheep_cheat_code)):
+        activate_cheat("super_sheep")
+        super_sheep_cheat_code_index = 0
+
+
+def activate_cheat(cheat):
+    global score, time_remaining, sheep_list
+
+    if(cheat == "score"):
+        add_to_score(1000)
+        update_ui(False, False, True)
+
+    elif(cheat == "time"):
+        time_remaining += 15
+        update_ui(False, True, False)
+
+    else:
+        for i in range(10):
+            sheep = Sheep(is_super = True)
+            sheep_list.append(sheep)
+            x = randint(int(fence_x1 + 30), int(fence_x2 - 30))
+            y = randint(int(fence_y1 + 30), int(fence_y2 - 30))
+            sheep.place(x, y)
+
 
 def bind_controls():
     if(controls == "cursor"):
@@ -626,6 +674,7 @@ def unbind_other_controls():
         window.unbind("<KeyPress-Right>")
         window.unbind("<KeyPress-Up>")
         window.unbind("<KeyPress-Down>")
+
 
 
 def exit_game():
@@ -682,5 +731,14 @@ canvas.pack()
 show_main_menu()
 
 window.bind("<Escape>", lambda event: toggle_pause_game())
+window.bind("<KeyPress>", on_key_press)
+
+score_cheat_code = "score"
+time_cheat_code = "time"
+super_sheep_cheat_code = "supersheep"
+
+score_cheat_code_index = 0
+time_cheat_code_index = 0
+super_sheep_cheat_code_index = 0
 
 window.mainloop()
