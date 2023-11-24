@@ -94,12 +94,33 @@ class Sheep(Ball):
 
         sheep_coords = self.get_coords()
 
+        gate_x1 = canvas.coords(gate)[0]
         gate_y1 = canvas.coords(gate)[1]
+        gate_x2 = canvas.coords(gate)[2]
         gate_y2 = canvas.coords(gate)[3]
 
         # If sheep has collided with right side of fence
-        if(sheep_coords[2] > fence_x2):
-            if(sheep_coords[1] > gate_y1 and sheep_coords[3] < gate_y2):
+
+        sheep_touched_fence = False
+        sheep_between_gate = False
+        if(gate_position == 1):
+            sheep_touched_fence = sheep_coords[2] > fence_x2
+            sheep_between_gate = sheep_coords[1] > gate_y1 and sheep_coords[3] < gate_y2
+        
+        elif (gate_position == 2):
+            sheep_touched_fence = sheep_coords[0] < fence_x1
+            sheep_between_gate = sheep_coords[1] > gate_y1 and sheep_coords[3] < gate_y2
+
+        elif(gate_position == 3):
+            sheep_touched_fence = sheep_coords[1] < fence_y1
+            sheep_between_gate = sheep_coords[0] > gate_x1 and sheep_coords[2] < gate_x2
+
+        elif(gate_position == 4):
+            sheep_touched_fence = sheep_coords[3] > fence_y2
+            sheep_between_gate = sheep_coords[0] > gate_x1 and sheep_coords[2] < gate_x2
+
+        if(sheep_touched_fence):
+            if(sheep_between_gate):
                 self.remove()
                 sheep_list.remove(self)
                 if(self.is_super):
@@ -185,14 +206,33 @@ def create_fence():
         fence = canvas.create_rectangle(fence_x1, fence_y1, fence_x2, fence_y2, fill="", outline="black", width=4)
 
     
-
-    
 def create_gate():
-    global gate
-    x1 = fence_x2 - 2
-    y1 = (canvas_height / 2) - 75
-    x2 = fence_x2 + 10
-    y2 = (canvas_height / 2) + 75
+    global gate, gate_position
+
+    gate_position = randint(1,4)
+    if(gate_position == 1):
+        x1 = fence_x2 - 2
+        y1 = (canvas_height / 2) - 75
+        x2 = fence_x2 + 10
+        y2 = (canvas_height / 2) + 75
+    
+    elif(gate_position == 2):
+        x1 = fence_x1 - 10
+        y1 = (canvas_height / 2) - 75
+        x2 = fence_x1 + 2
+        y2 = (canvas_height / 2) + 75
+
+    elif(gate_position == 3):
+        x1 = (canvas_width / 2) - 75
+        y1 = fence_y1 - 10
+        x2 = (canvas_width / 2) + 75
+        y2 = fence_y1 + 2
+
+    elif(gate_position == 4):
+        x1 = (canvas_width / 2) - 75
+        y1 = fence_y2 - 2
+        x2 = (canvas_width / 2) + 75
+        y2 = fence_y2 + 10
 
     try:
         gate
