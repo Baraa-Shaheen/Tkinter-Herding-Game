@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 from random import randint
 from math import sqrt
+from PIL import Image, ImageTk
 
 class Ball:
     def __init__(self, radius, colour):
@@ -60,7 +61,7 @@ class Sheep(Ball):
     def __init__(self, radius = 20, colour = "white", value = 10, is_super = False):
         if(is_super):
             radius = radius * 1.5
-            value = value * 2
+            value = value * 5
         super().__init__(radius, colour)
         self.is_super = is_super
         self.value = value
@@ -599,6 +600,13 @@ def on_key_press(event):
         else:
             super_sheep_cheat_code_index = 0
 
+        if(key == "b" and not boss_image_showing):
+            show_boss_image()
+        
+    else:
+        if(key == "b" and boss_image_showing):
+            hide_boss_image()
+
     if(score_cheat_code_index == len(score_cheat_code)):
         activate_cheat("score")
         score_cheat_code_index = 0
@@ -608,6 +616,30 @@ def on_key_press(event):
     if(super_sheep_cheat_code_index == len(super_sheep_cheat_code)):
         activate_cheat("super_sheep")
         super_sheep_cheat_code_index = 0
+
+
+def show_boss_image():
+    global boss_image_showing, boss_image_tk_id, game_paused
+    game_paused = True
+
+    boss_image = Image.open("boss.png")
+    boss_image = boss_image.resize((canvas_width, canvas_height))
+    boss_image_tk = ImageTk.PhotoImage(boss_image)
+    boss_image_tk_id = canvas.create_image(0, 0, anchor=tk.NW, image=boss_image_tk)
+    canvas.image = boss_image_tk
+
+    window.unbind("<Escape>")
+    boss_image_showing = True
+
+
+def hide_boss_image():
+    global boss_image_showing, game_paused
+    game_paused = False
+    update_game()
+
+    canvas.delete(boss_image_tk_id)
+    window.bind("<Escape>", lambda event: toggle_pause_game())
+    boss_image_showing = False
 
 
 def activate_cheat(cheat):
@@ -740,5 +772,7 @@ super_sheep_cheat_code = "supersheep"
 score_cheat_code_index = 0
 time_cheat_code_index = 0
 super_sheep_cheat_code_index = 0
+
+boss_image_showing = False
 
 window.mainloop()
