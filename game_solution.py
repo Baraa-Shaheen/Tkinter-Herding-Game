@@ -202,23 +202,35 @@ def create_gate():
         gate = canvas.create_rectangle(x1, y1, x2, y2, fill="green", outline = "green", width = 0)
 
 
-def spawn_sheep():
+def spawn_sheep(spawn_loaded_sheep = False):
     global sheep_list
     sheep_list = []
     
-    for i in range (level):
-        # 10% chance of sheep being super sheep
-        x = randint(0,9)
-        if(x != 0):
-            sheep = Sheep()
-            sheep_list.append(sheep)
-        else:
-            sheep = Sheep(is_super = True)
-            sheep_list.append(sheep)
-    for sheep in sheep_list:
-        x = randint(int(fence_x1 + 30), int(fence_x2 - 30))
-        y = randint(int(fence_y1 + 30), int(fence_y2 - 30))
-        sheep.place(x, y)
+    if(not spawn_loaded_sheep):
+        for i in range (level):
+            # 10% chance of sheep being super sheep
+            x = randint(0,9)
+            if(x != 0):
+                sheep = Sheep()
+                sheep_list.append(sheep)
+            else:
+                sheep = Sheep(is_super = True)
+                sheep_list.append(sheep)
+        for sheep in sheep_list:
+            x = randint(int(fence_x1 + 30), int(fence_x2 - 30))
+            y = randint(int(fence_y1 + 30), int(fence_y2 - 30))
+            sheep.place(x, y)
+    
+    else:
+        for sheep_data in loaded_sheep_data_list:
+            if(sheep_data[2] == 0):
+                sheep = Sheep()
+                sheep_list.append(sheep)
+                sheep.place(sheep_data[0], sheep_data[1])
+            else:
+                sheep = Sheep(is_super = True)
+                sheep_list.append(sheep) 
+                sheep.place(sheep_data[0], sheep_data[1])
 
 def update_ui(update_level_text = True, update_time_remaining_text = True, update_score_text = True):
     global level_text, time_remaining_text, score_text
@@ -308,13 +320,14 @@ def update_game():
         window.after(15, update_game)
 
 
-def start_new_level():
+def start_new_level(start_loaded_level = False):
     global time_remaining
-    time_remaining = 15
+    if(not start_loaded_level):
+        time_remaining = 15
     update_ui()
     create_fence()
     create_gate()
-    spawn_sheep()
+    spawn_sheep(start_loaded_level)
 
 
 def toggle_pause_game():
@@ -513,16 +526,15 @@ def return_to_main_menu(play_again = False):
     show_main_menu()
 
 
-# use get_centre instead probably
 def save_game():
     sheep_data_list = []
     for sheep in sheep_list:
         if(sheep.is_super):
-            sheep_data = sheep.get_coords()
-            sheep_data.append(1)
+            sheep_data = sheep.get_centre()
+            sheep_data = sheep_data + (1,)
         else:
-            sheep_data = sheep.get_coords()
-            sheep_data.append(0)
+            sheep_data = sheep.get_centre()
+            sheep_data = sheep_data + (0,)
         sheep_data_list.append(sheep_data)
 
     with open('save.txt', 'w') as file:
@@ -537,8 +549,8 @@ def save_game():
 
 
 def load_game():
-    global level, time_remaining, score
-    sheep_data_list = []
+    global level, time_remaining, score, loaded_sheep_data_list
+    loaded_sheep_data_list = []
     with open("save.txt", 'r') as file:
     # Read the first line to get level, score, and time_remaining values
         first_line = file.readline().split()
@@ -548,7 +560,8 @@ def load_game():
     
         for line in file:
             loaded_data_line = [float(value) for value in line.split()]
-            sheep_data_list.append(loaded_data_line)
+            loaded_sheep_data_list.append(loaded_data_line)
+    start_game(start_loaded_game = True)
             
         
 
@@ -618,7 +631,7 @@ def unbind_other_controls():
 def exit_game():
     window.destroy()
 
-def start_game(play_again = False):
+def start_game(play_again = False, start_loaded_game = False):
     global game_running, game_paused, game_over, level, score, controls, player
     game_running = True
     game_paused = False
@@ -641,14 +654,17 @@ def start_game(play_again = False):
 
     player.place(canvas_width / 2, canvas_height / 2)
 
-    level = 1
-    score = 0
+    if(not start_loaded_game):
+        level = 1
+        score = 0
+
     if(play_again):
         remove_all_elements()
         hide_game_over_menu()
     else:
         hide_main_menu()
-    start_new_level()
+
+    start_new_level(start_loaded_game)
     update_timer()
     update_game()
 
