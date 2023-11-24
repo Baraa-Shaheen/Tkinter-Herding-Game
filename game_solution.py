@@ -1,6 +1,7 @@
 #1920x1080
 
 import tkinter as tk
+from tkinter import messagebox
 from random import randint
 from math import sqrt
 
@@ -512,13 +513,8 @@ def return_to_main_menu(play_again = False):
     show_main_menu()
 
 
+# use get_centre instead probably
 def save_game():
-    # sheep_coords_list = []
-    # for sheep in sheep_list:
-    #     sheep_coords_list.append(sheep.get_coords())
-
-    
-
     sheep_data_list = []
     for sheep in sheep_list:
         if(sheep.is_super):
@@ -529,7 +525,7 @@ def save_game():
             sheep_data.append(0)
         sheep_data_list.append(sheep_data)
 
-    with open('save.txt', 'a') as file:
+    with open('save.txt', 'w') as file:
         file.write(f"{level} {time_remaining} {score}\n")
         for sheep_data in sheep_data_list:
             sheep_data_string = ""
@@ -537,11 +533,24 @@ def save_game():
                 sheep_data_string+=str(coord) + " "
             sheep_data_string = sheep_data_string[:-1]
             file.write(f"{sheep_data_string}\n")
+    tk.messagebox.showinfo("", "Game Saved") 
 
 
 def load_game():
-
-    pass
+    global level, time_remaining, score
+    sheep_data_list = []
+    with open("save.txt", 'r') as file:
+    # Read the first line to get level, score, and time_remaining values
+        first_line = file.readline().split()
+        level = int(first_line[0])
+        time_remaining = int(first_line[1])
+        score = int(first_line[2])
+    
+        for line in file:
+            loaded_data_line = [float(value) for value in line.split()]
+            sheep_data_list.append(loaded_data_line)
+            
+        
 
 
 def on_key_press(event):
