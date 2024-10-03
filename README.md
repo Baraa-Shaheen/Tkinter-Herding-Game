@@ -8,7 +8,7 @@
 2. **Clone the Repository**:
    - Clone this repository to your local machine using:
      ```bash
-     git clone https://github.com/Baraa-Shaheen/Python-Tkinter-Game.git
+     git clone https://github.com/Baraa-Shaheen/Tkinter-Herding-Game
      ```
 
 3. **Install Pillow**:
