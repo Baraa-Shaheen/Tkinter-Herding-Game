@@ -1,5 +1,3 @@
-#1920x1080
-
 import tkinter as tk
 from tkinter import messagebox
 from random import randint
@@ -790,13 +788,12 @@ def start_game(play_again = False, start_loaded_game = False):
     update_game()
 
 
-# Create 1920x1080 window with green canvas
+# Create 1600x900 window with green canvas
 window = tk.Tk()
-window.geometry("1920x1080")
+window.geometry("1600x900")
 window.title("Super Sheep Frenzy")
-window.attributes("-fullscreen", True)
-canvas_width = 1920
-canvas_height = 1080
+canvas_width = 1600
+canvas_height = 900
 canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg="green")
 canvas.pack()
 
