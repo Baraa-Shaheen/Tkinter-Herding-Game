@@ -1,29 +1,5 @@
 <p align="center"><img width=12.5% src="https://github.com/Baraa-Shaheen/Python-Tkinter-Game/blob/Cwk-02/sheep.png"></p>
 
-## Installation
-
-1. **Ensure Python is Installed**:
-   - You can download the latest version of Python from [here](https://www.python.org/downloads/).
-
-2. **Clone the Repository**:
-   - Clone this repository to your local machine using:
-     ```bash
-     git clone https://github.com/Baraa-Shaheen/Tkinter-Herding-Game
-     ```
-
-3. **Install Pillow**:
-   - Install the required **Pillow** package by running:
-     ```bash
-     pip install pillow
-     ```
-
-4. **Run the Game**:
-   - Navigate to the project directory and run the game using:
-     ```bash
-     python game_solution.py
-     ```
-5. **Enjoy!**
-
 ## Game Overview
 
 ### Objective:
@@ -54,5 +30,28 @@ Guide sheep to the exit to earn points and advance through levels.
 - `TIME`: Adds 15 seconds to the timer.
 - `SCORE`: Adds 1000 points to your score.
 
+## Installation
+
+1. **Ensure Python is Installed**:
+   - You can download the latest version of Python from [here](https://www.python.org/downloads/).
+
+2. **Clone the Repository**:
+   - Clone this repository to your local machine using:
+     ```bash
+     git clone https://github.com/Baraa-Shaheen/Tkinter-Herding-Game
+     ```
+
+3. **Install Pillow**:
+   - Install the required **Pillow** package by running:
+     ```bash
+     pip install pillow
+     ```
+
+4. **Run the Game**:
+   - Navigate to the project directory and run the game using:
+     ```bash
+     python game_solution.py
+     ```
+5. **Enjoy!**
 
 ### My PB is Level **52** (can you beat this?).
